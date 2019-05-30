@@ -7,7 +7,7 @@ namespace OnlineMarketPlace.DataAccess
 {
     public class Context : DbContext
     {
-        public static readonly Context _context = new Context("", "", "", "");
+        public static readonly Context _instance = new Context("", "", "", "");
 
         private string host { get; set; }
         private string db { get; set; }
