@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineMarketPlace.Domain.Tables;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,24 +8,36 @@ namespace OnlineMarketPlace.DataAccess
 {
     public class Context : DbContext
     {
-        public static readonly Context _instance = new Context("", "", "", "");
+        //database params
+        public string host { get; set; }
+        public string db { get; set; }
+        public string dbUser { get; set; }
+        public string dbPassword { get; set; }
 
-        private string host { get; set; }
-        private string db { get; set; }
-        private string dbUser { get; set; }
-        private string dbPassword { get; set; }
+        //tables
+        public DbSet<Users> Users { get; set; }
+        public DbSet<ShippingAddresses> ShippingAddresses { get; set; }
+        public DbSet<Roles> Roles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=" + host + ";Initial Catalog=" + db + ";Persist Security Info=True;User ID=" + dbUser + ";Password=" + dbPassword);
         }
         
-        private Context(string host, string db, string dbUser, string dbPassword)
+        public Context(string host, string db, string dbUser, string dbPassword)
         {
             this.host = host;
             this.db = db;
             this.dbUser = dbUser;
             this.dbPassword = dbPassword;
+        }
+
+        public Context()
+        {
+            host = "192.168.1.104";
+            db = "OnlineMarketPlace";
+            dbUser = "SA";
+            dbPassword = "Password1!";
         }
     }
 }
