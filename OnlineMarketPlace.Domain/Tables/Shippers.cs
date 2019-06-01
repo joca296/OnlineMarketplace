@@ -4,8 +4,10 @@ using System.Text;
 
 namespace OnlineMarketPlace.Domain.Tables
 {
-    public class Categories : BaseTable
+    public class Shippers : BaseTable
     {
         public string Name { get; set; }
+        public double FreightPerKilo { get; set; }
+        public double? FreightBase { get; set; }
     }
 }

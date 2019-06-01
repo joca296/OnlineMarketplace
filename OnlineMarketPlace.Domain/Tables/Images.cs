@@ -6,7 +6,7 @@ namespace OnlineMarketPlace.Domain.Tables
 {
     public class Images : BaseTable
     {
-        public string path { get; set; }
-        public string alt { get; set; }
+        public string Path { get; set; }
+        public string Alt { get; set; }
     }
 }

@@ -6,11 +6,11 @@ namespace OnlineMarketPlace.Domain.Tables
 {
     public class Products : BaseTable
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public double unitPrice { get; set; }
-        public int quantityAvailable { get; set; }
-        public ICollection<Images> images { get; set; }
-        public Categories category { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double UnitPrice { get; set; }
+        public double UnitWeight { get; set; }
+        public int QuantityAvailable { get; set; }
+        public Categories Category { get; set; }
     }
 }

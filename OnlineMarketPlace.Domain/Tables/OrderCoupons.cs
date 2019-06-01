@@ -4,8 +4,9 @@ using System.Text;
 
 namespace OnlineMarketPlace.Domain.Tables
 {
-    public class Categories : BaseTable
+    public class OrderCoupons : BaseTable
     {
-        public string Name { get; set; }
+        public Orders Order { get; set; }
+        public Coupons Coupon { get; set; }
     }
 }

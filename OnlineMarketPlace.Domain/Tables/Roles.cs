@@ -6,6 +6,6 @@ namespace OnlineMarketPlace.Domain.Tables
 {
     public class Roles : BaseTable
     {
-        public string name { get; set; }
+        public string Name { get; set; }
     }
 }

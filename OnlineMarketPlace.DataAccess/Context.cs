@@ -9,10 +9,10 @@ namespace OnlineMarketPlace.DataAccess
     public class Context : DbContext
     {
         //database params
-        public string host { get; set; }
-        public string db { get; set; }
-        public string dbUser { get; set; }
-        public string dbPassword { get; set; }
+        public string Host { get; set; }
+        public string Db { get; set; }
+        public string DbUser { get; set; }
+        public string DbPassword { get; set; }
 
         //tables
         public DbSet<Users> Users { get; set; }
@@ -21,26 +21,32 @@ namespace OnlineMarketPlace.DataAccess
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Products> Products { get; set; }
+        public DbSet<ProductImages> ProductImages { get; set; }
+        public DbSet<Coupons> Coupons { get; set; }
+        public DbSet<Shippers> Shippers { get; set; }
+        public DbSet<Orders> Orders { get; set; }
+        public DbSet<OrderProducts> OrderProducts { get; set; }
+        public DbSet<OrderCoupons> OrderCoupons { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=" + host + ";Initial Catalog=" + db + ";Persist Security Info=True;User ID=" + dbUser + ";Password=" + dbPassword);
+            optionsBuilder.UseSqlServer("Data Source=" + Host + ";Initial Catalog=" + Db + ";Persist Security Info=True;User ID=" + DbUser + ";Password=" + DbPassword);
         }
         
         public Context(string host, string db, string dbUser, string dbPassword)
         {
-            this.host = host;
-            this.db = db;
-            this.dbUser = dbUser;
-            this.dbPassword = dbPassword;
+            this.Host = host;
+            this.Db = db;
+            this.DbUser = dbUser;
+            this.DbPassword = dbPassword;
         }
 
         public Context()
         {
-            host = "192.168.1.104";
-            db = "OnlineMarketPlace";
-            dbUser = "SA";
-            dbPassword = "Password1!";
+            Host = "192.168.1.104";
+            Db = "OnlineMarketPlace";
+            DbUser = "SA";
+            DbPassword = "Password1!";
         }
     }
 }
