@@ -18,6 +18,9 @@ namespace OnlineMarketPlace.DataAccess
         public DbSet<Users> Users { get; set; }
         public DbSet<ShippingAddresses> ShippingAddresses { get; set; }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<Categories> Categories { get; set; }
+        public DbSet<Images> Images { get; set; }
+        public DbSet<Products> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
