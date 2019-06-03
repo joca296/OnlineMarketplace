@@ -8,6 +8,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineMarketPlace.Application\OnlineMarketPlace.Application.csproj" />
+    <ProjectReference Include="..\OnlineMarketPlace.DataAccess\OnlineMarketPlace.DataAccess.csproj" />
+    <ProjectReference Include="..\OnlineMarketPlace.Domain\OnlineMarketPlace.Domain.csproj" />
+    <ProjectReference Include="..\OnlineMarketPlace.EfCommands\OnlineMarketPlace.EfCommands.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace OnlineMarketPlace.Commands
+namespace OnlineMarketPlace.EfCommands
 {
     class Functions
     {
-        public static string sha256Hash(string input)
+        public static string CreateSha256Hash(string input)
         {
             // Create a SHA256   
             using (SHA256 sha256Hash = SHA256.Create())

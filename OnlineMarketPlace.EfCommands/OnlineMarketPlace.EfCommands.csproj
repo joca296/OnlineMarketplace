@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineMarketPlace.Application\OnlineMarketPlace.Application.csproj" />
+    <ProjectReference Include="..\OnlineMarketPlace.DataAccess\OnlineMarketPlace.DataAccess.csproj" />
+    <ProjectReference Include="..\OnlineMarketPlace.Domain\OnlineMarketPlace.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
