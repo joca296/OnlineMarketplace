@@ -9,7 +9,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public Orders Order { get; set; }
         public Products Product { get; set; }
         public int Quantity { get; set; }
-        public double TotalWeight { get; set; }
-        public double TotalPrice { get; set; }
+        public double Price { get; set; }
     }
 }
