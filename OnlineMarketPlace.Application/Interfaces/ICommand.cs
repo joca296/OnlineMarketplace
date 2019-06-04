@@ -11,6 +11,6 @@ namespace OnlineMarketPlace.Application.Interfaces
 
     public interface ICommand<TRequest,TResponse> where TResponse : class
     {
-        void Execute(TRequest request);
+        TResponse Execute(TRequest request);
     }
 }
