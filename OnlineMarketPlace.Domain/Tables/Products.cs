@@ -12,5 +12,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public double UnitWeight { get; set; }
         public int QuantityAvailable { get; set; }
         public Categories Category { get; set; }
+        public SubCategories SubCategory { get; set; }
     }
 }
