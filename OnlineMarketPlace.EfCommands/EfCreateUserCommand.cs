@@ -5,6 +5,7 @@ using OnlineMarketPlace.DataAccess;
 using OnlineMarketPlace.Domain.Tables;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
@@ -23,6 +24,9 @@ namespace OnlineMarketPlace.EfCommands
             if(_context.Roles.Find(request.RoleId) == null)
                 throw new EntityNotFoundException("Role with id:" + request.RoleId);
 
+            if (_context.Users.Any(x => x.Email == request.Email))
+                throw new EntityAlreadyExists("Email: " + request.Email);
+
             _context.Users.Add(new Users {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -30,6 +34,7 @@ namespace OnlineMarketPlace.EfCommands
                 Password = Functions.CreateSha256Hash(request.Password),
                 DateCreated = DateTime.Now,
                 Active = false,
+                Key = Functions.CreateSha256Hash(Functions.GetUniqID()),
                 Role = _context.Roles.Find(request.RoleId)
             });
 

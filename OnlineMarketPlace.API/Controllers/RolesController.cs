@@ -11,22 +11,22 @@ namespace OnlineMarketPlace.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class RolesController : ControllerBase
     {
-        private readonly ICreateUserCommand _createUser;
+        private readonly ICreateRoleCommand _createRole;
 
-        public UsersController(ICreateUserCommand createUser)
+        public RolesController(ICreateRoleCommand createRole)
         {
-            _createUser = createUser;
+            _createRole = createRole;
         }
 
-        // POST: api/Users
+        // POST: api/Roles
         [HttpPost]
-        public IActionResult Post([FromForm] CreateUserDto dto)
+        public IActionResult Post([FromForm] CreateRoleDto dto)
         {
             try
             {
-                _createUser.Execute(dto);
+                _createRole.Execute(dto);
                 return Ok();
             }
             catch (Exception e)
