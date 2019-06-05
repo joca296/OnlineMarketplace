@@ -33,6 +33,8 @@ namespace OnlineMarketPlace.API
             services.AddDbContext<Context>();
             services.AddTransient<ICreateUserCommand, EfCreateUserCommand>();
             services.AddTransient<ICreateRoleCommand, EfCreateRoleCommand>();
+            services.AddTransient<ICreateCategoryCommand, EfCreateCategoryCommand>();
+            services.AddTransient<ICreateSubCategoryCommand, EfCreateSubCategoryCommand>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info

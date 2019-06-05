@@ -19,6 +19,7 @@ namespace OnlineMarketPlace.DataAccess
         public DbSet<ShippingAddresses> ShippingAddresses { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Categories> Categories { get; set; }
+        public DbSet<SubCategories> SubCategories { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<ProductImages> ProductImages { get; set; }
