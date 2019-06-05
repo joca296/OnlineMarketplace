@@ -15,10 +15,12 @@ namespace OnlineMarketPlace.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ICreateUserCommand _createUser;
+        private readonly IActivateUserCommand _activateUser;
 
-        public UsersController(ICreateUserCommand createUser)
+        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser)
         {
             _createUser = createUser;
+            _activateUser = activateUser;
         }
 
         // POST: api/Users
@@ -37,6 +39,25 @@ namespace OnlineMarketPlace.API.Controllers
             catch (EntityAlreadyExists e)
             {
                 return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        // GET: api/Users/Activate/key
+        [HttpGet("Activate/{key}")]
+        public IActionResult ActivateUser(string key)
+        {
+            try
+            {
+                _activateUser.Execute(key);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return UnprocessableEntity(e.Message);
             }
             catch (Exception e)
             {

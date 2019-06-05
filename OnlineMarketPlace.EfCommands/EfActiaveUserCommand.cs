@@ -1,0 +1,36 @@
+﻿using OnlineMarketPlace.Application.Commands;
+using OnlineMarketPlace.Application.Exceptions;
+using OnlineMarketPlace.DataAccess;
+using OnlineMarketPlace.Domain.Tables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace OnlineMarketPlace.EfCommands
+{
+    public class EfActiaveUserCommand : IActivateUserCommand
+    {
+        private readonly Context _context;
+
+        public EfActiaveUserCommand(Context context)
+        {
+            _context = context;
+        }
+
+        public void Execute(string request)
+        {
+
+            if (!_context.Users.Any(x => x.Key == request))
+                throw new EntityNotFoundException("User with key: " + request);
+
+            var user = _context.Users.First(x => x.Key == request);
+
+            user.Active = true;
+            user.DateUpdated = DateTime.Now;
+            user.Key = null;
+
+            _context.SaveChanges();
+        }
+    }
+}

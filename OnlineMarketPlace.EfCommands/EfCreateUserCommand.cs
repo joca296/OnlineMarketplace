@@ -44,9 +44,10 @@ namespace OnlineMarketPlace.EfCommands
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("onlinemarketplace@gmail.com", "OnlineMarketPlace");
             mailMessage.To.Add(new MailAddress(request.Email, request.FirstName + " " + request.LastName));
+            mailMessage.Subject = "OnlineMarketPlace - Account activation";
 
             string message = "You have registered on our website, use the following link to activate your account."+System.Environment.NewLine;
-            message += Functions.BaseUrl + "/api/Users/activate/" + validationKey;
+            message += Functions.BaseUrl + "/api/Users/Activate/" + validationKey;
             mailMessage.Body = message;
 
             Functions.SmtpClient.Send(mailMessage);
