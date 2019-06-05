@@ -6,6 +6,7 @@ using OnlineMarketPlace.Domain.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
@@ -27,6 +28,8 @@ namespace OnlineMarketPlace.EfCommands
             if (_context.Users.Any(x => x.Email == request.Email))
                 throw new EntityAlreadyExists("Email: " + request.Email);
 
+            string validationKey = Functions.CreateSha256Hash(Functions.GetUniqID());
+
             _context.Users.Add(new Users {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -34,13 +37,21 @@ namespace OnlineMarketPlace.EfCommands
                 Password = Functions.CreateSha256Hash(request.Password),
                 DateCreated = DateTime.Now,
                 Active = false,
-                Key = Functions.CreateSha256Hash(Functions.GetUniqID()),
+                Key = validationKey,
                 Role = _context.Roles.Find(request.RoleId)
             });
 
-            _context.SaveChanges();
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("onlinemarketplace@gmail.com", "OnlineMarketPlace");
+            mailMessage.To.Add(new MailAddress(request.Email, request.FirstName + " " + request.LastName));
 
-            //add user activation here
+            string message = "You have registered on our website, use the following link to activate your account."+System.Environment.NewLine;
+            message += Functions.BaseUrl + "/api/Users/activate/" + validationKey;
+            mailMessage.Body = message;
+
+            Functions.SmtpClient.Send(mailMessage);
+
+            _context.SaveChanges();
         }
     }
 }

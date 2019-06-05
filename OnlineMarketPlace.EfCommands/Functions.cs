@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,6 +9,26 @@ namespace OnlineMarketPlace.EfCommands
 {
     class Functions
     {
+        public static string BaseUrl
+        {
+            get
+            {
+                return "https://localhost:44387";
+            }
+        }
+
+        public static SmtpClient SmtpClient
+        {
+            get
+            {
+                return new SmtpClient("smtp.gmail.com", 587)
+                {
+                    Credentials = new NetworkCredential("joca296testingemail@gmail.com", "TestingAccount1!"),
+                    EnableSsl = true
+                };
+            }
+        }
+
         public static string CreateSha256Hash(string input)
         {
             // Create a SHA256   

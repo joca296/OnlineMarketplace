@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
+using OnlineMarketPlace.Application.Exceptions;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -29,9 +30,17 @@ namespace OnlineMarketPlace.API.Controllers
                 _createUser.Execute(dto);
                 return Ok();
             }
-            catch (Exception e)
+            catch (EntityNotFoundException e)
             {
                 return UnprocessableEntity(e.Message);
+            }
+            catch (EntityAlreadyExists e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
             }
         }
     }
