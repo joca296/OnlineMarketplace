@@ -8,13 +8,10 @@ using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
 {
-    public class EfCreateCategoryCommand : ICreateCategoryCommand
+    public class EfCreateCategoryCommand : EfCommand, ICreateCategoryCommand
     {
-        private readonly Context _context;
-
-        public EfCreateCategoryCommand(Context context)
+        public EfCreateCategoryCommand(Context context) : base(context)
         {
-            _context = context;
         }
 
         public void Execute(CreateCategotyDto request)

@@ -9,13 +9,10 @@ using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
 {
-    public class EfActiaveUserCommand : IActivateUserCommand
+    public class EfActiaveUserCommand : EfCommand, IActivateUserCommand
     {
-        private readonly Context _context;
-
-        public EfActiaveUserCommand(Context context)
+        public EfActiaveUserCommand(Context context) : base(context)
         {
-            _context = context;
         }
 
         public void Execute(string request)

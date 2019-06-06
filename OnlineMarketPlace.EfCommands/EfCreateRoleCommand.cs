@@ -8,13 +8,10 @@ using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
 {
-    public class EfCreateRoleCommand : ICreateRoleCommand
+    public class EfCreateRoleCommand : EfCommand, ICreateRoleCommand
     {
-        private readonly Context _context;
-
-        public EfCreateRoleCommand(Context context)
+        public EfCreateRoleCommand(Context context) : base(context)
         {
-            _context = context;
         }
 
         public void Execute(CreateRoleDto request)

@@ -11,13 +11,10 @@ using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
 {
-    public class EfCreateUserCommand : ICreateUserCommand
+    public class EfCreateUserCommand : EfCommand, ICreateUserCommand
     {
-        private readonly Context _context;
-
-        public EfCreateUserCommand(Context context)
+        public EfCreateUserCommand(Context context) : base(context)
         {
-            _context = context;
         }
 
         public void Execute(CreateUserDto request)

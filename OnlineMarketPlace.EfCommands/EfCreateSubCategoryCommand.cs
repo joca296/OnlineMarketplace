@@ -9,14 +9,12 @@ using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
 {
-    public class EfCreateSubCategoryCommand : ICreateSubCategoryCommand
+    public class EfCreateSubCategoryCommand : EfCommand, ICreateSubCategoryCommand
     {
-        private readonly Context _context;
-
-        public EfCreateSubCategoryCommand(Context context)
+        public EfCreateSubCategoryCommand(Context context) : base(context)
         {
-            _context = context;
         }
+
         public void Execute(CreateSubCategoryDto request)
         {
             if(_context.Categories.Find(request.CategoryId) == null)
