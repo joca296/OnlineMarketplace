@@ -17,17 +17,24 @@ namespace OnlineMarketPlace.EfCommands
 
         public void Execute(string request)
         {
+            if (Validate(request))
+            {
+                var user = _context.Users.First(x => x.Key == request);
 
+                user.Active = true;
+                user.DateUpdated = DateTime.Now;
+                user.Key = null;
+
+                _context.SaveChanges();
+            }
+        }
+
+        public bool Validate(string request)
+        {
             if (!_context.Users.Any(x => x.Key == request))
                 throw new EntityNotFoundException("User with key: " + request);
 
-            var user = _context.Users.First(x => x.Key == request);
-
-            user.Active = true;
-            user.DateUpdated = DateTime.Now;
-            user.Key = null;
-
-            _context.SaveChanges();
+            return true;
         }
     }
 }

@@ -4,14 +4,14 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.Exceptions
 {
-    public class EntityAlreadyExists : Exception
+    public class EntityAlreadyExistsException : Exception
     {
-        public EntityAlreadyExists()
+        public EntityAlreadyExistsException()
         {
 
         }
 
-        public EntityAlreadyExists(string entity) 
+        public EntityAlreadyExistsException(string entity) 
             : base (entity+" already exists.")
         {
 

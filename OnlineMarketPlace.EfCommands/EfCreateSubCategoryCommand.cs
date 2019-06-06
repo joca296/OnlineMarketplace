@@ -5,6 +5,7 @@ using OnlineMarketPlace.DataAccess;
 using OnlineMarketPlace.Domain.Tables;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
@@ -17,10 +18,7 @@ namespace OnlineMarketPlace.EfCommands
 
         public void Execute(CreateSubCategoryDto request)
         {
-            if(_context.Categories.Find(request.CategoryId) == null)
-            {
-                throw new EntityNotFoundException("Category with id: " + request.CategoryId);
-            }
+            
 
             _context.SubCategories.Add(new SubCategories
             {
@@ -30,6 +28,17 @@ namespace OnlineMarketPlace.EfCommands
                 Name = request.Name
             });
             _context.SaveChanges();
+        }
+
+        public bool Validate(CreateSubCategoryDto request)
+        {
+            if (_context.Categories.Find(request.CategoryId) == null)
+                throw new EntityNotFoundException("Category with id: " + request.CategoryId);
+
+            if (_context.SubCategories.Any(x => x.Name.Trim().ToLower() == request.Name.Trim().ToLower()))
+                throw new EntityAlreadyExistsException("Sub Category with name:" + request.Name);
+
+            return true;
         }
     }
 }
