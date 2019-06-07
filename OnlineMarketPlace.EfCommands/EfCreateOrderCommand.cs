@@ -25,7 +25,7 @@ namespace OnlineMarketPlace.EfCommands
                 bool freeShipping = false;
                 foreach (var couponCode in request.CouponCodes)
                 {
-                    if (_context.Coupons.First(x=> x.Code == couponCode).FreeShipping)
+                    if (_context.Coupons.First(x=> Functions.CreateSha256Hash(x.Code) == couponCode).FreeShipping)
                     {
                         freeShipping = true;
                         break;
@@ -45,6 +45,12 @@ namespace OnlineMarketPlace.EfCommands
                             request.QuantityPerProduct[i] *
                             _context.Shippers.Find(request.ShipperId).FreightPerKilo;
                     i++;
+                }
+
+                foreach (var couponCode in request.CouponCodes)
+                {
+                    double discount = _context.Coupons.First(x => Functions.CreateSha256Hash(x.Code) == couponCode).Discount;
+                    totalPrice -= totalPrice * (discount / 100);
                 }
 
                 var newOrder = new Orders
@@ -121,7 +127,7 @@ namespace OnlineMarketPlace.EfCommands
                 
 
             foreach (var couponCode in request.CouponCodes)
-                if (_context.Coupons.FirstOrDefault(x=> x.Code == couponCode) == null)
+                if (_context.Coupons.FirstOrDefault(x=> Functions.CreateSha256Hash(x.Code) == couponCode) == null)
                     throw new EntityNotFoundException($"Coupon with code: {couponCode}");
 
             return true;
