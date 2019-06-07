@@ -40,6 +40,7 @@ namespace OnlineMarketPlace.API
             services.AddTransient<ICreateSubCategoryCommand, EfCreateSubCategoryCommand>();
             services.AddTransient<IActivateUserCommand, EfActiaveUserCommand>();
             services.AddTransient<ICreateShippingAddressCommand, EfCreateShippingAddressCommand>();
+            services.AddTransient<ICreateOrderCommand, EfCreateOrderCommand>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info

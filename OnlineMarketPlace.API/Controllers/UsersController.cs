@@ -30,13 +30,13 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <returns></returns>
         /// <response code="200">User has successfully registered and an email has been sent in order to activate it</response>
-        /// <response code="422">The given role ID doesn't exist in the database</response>
+        /// <response code="404">The given role ID doesn't exist in the database</response>
         /// <response code="409">A user with the given email already exists</response>
         /// <response code="500">Other server errors</response>
         // POST: api/Users
         [HttpPost]
         [ProducesResponseType(200)]
-        [ProducesResponseType(422)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
         public IActionResult Post([FromForm] CreateUserDto dto)
@@ -48,7 +48,7 @@ namespace OnlineMarketPlace.API.Controllers
             }
             catch (EntityNotFoundException e)
             {
-                return UnprocessableEntity(e.Message);
+                return NotFound(e.Message);
             }
             catch (EntityAlreadyExistsException e)
             {
