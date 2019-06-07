@@ -79,6 +79,10 @@ namespace OnlineMarketPlace.EfCommands
                         Quantity = request.QuantityPerProduct[j],
                         Price = _context.Products.Find(productId).UnitPrice
                     });
+
+                    var product = _context.Products.Find(productId);
+                    product.QuantityAvailable -= request.QuantityPerProduct[j];
+
                     j++;
                 }
 
@@ -101,9 +105,20 @@ namespace OnlineMarketPlace.EfCommands
             if (request.ProductIds.Count != request.QuantityPerProduct.Count)
                 throw new EntityMissmatchException("Product count", "Quantity per product");
 
+            int i = 0;
             foreach (var productId in request.ProductIds)
-                if (_context.Products.Any(x => x.Id == productId))
+            {
+                var product = _context.Products.Find(productId);
+
+                if (product == null)
                     throw new EntityNotFoundException($"Product with id: {productId}");
+
+                if (product.QuantityAvailable < request.QuantityPerProduct[i])
+                    throw new ProductNotAvailableException(productId, product.QuantityAvailable, request.QuantityPerProduct[i]);
+
+                i++;
+            }
+                
 
             foreach (var couponCode in request.CouponCodes)
                 if (_context.Coupons.FirstOrDefault(x=> x.Code == couponCode) == null)

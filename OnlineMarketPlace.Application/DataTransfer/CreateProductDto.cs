@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.DataTransfer
 {
-    class CreateProductDto
+    public class CreateProductDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -13,7 +13,6 @@ namespace OnlineMarketPlace.Application.DataTransfer
         public int QuantityAvailable { get; set; }
         public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
-       
-        //add dto properties later
+        //public List<Files> Images { get; set; }
     }
 }
