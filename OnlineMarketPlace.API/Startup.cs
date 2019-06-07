@@ -41,6 +41,7 @@ namespace OnlineMarketPlace.API
             services.AddTransient<IActivateUserCommand, EfActiaveUserCommand>();
             services.AddTransient<ICreateShippingAddressCommand, EfCreateShippingAddressCommand>();
             services.AddTransient<ICreateOrderCommand, EfCreateOrderCommand>();
+            services.AddTransient<ICreateCouponCommand, EfCreateCouponCommand>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info
@@ -48,6 +49,8 @@ namespace OnlineMarketPlace.API
                     Title = "OnlineMarketPlace API",
                     Version = "v1"
                 });
+
+                c.DocumentFilter<ModelsDocumentFilter>();
 
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
