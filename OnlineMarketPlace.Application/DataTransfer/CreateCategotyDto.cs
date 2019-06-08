@@ -7,6 +7,9 @@ namespace OnlineMarketPlace.Application.DataTransfer
 {
     public class CreateCategotyDto
     {
+        /// <summary>
+        /// Must be a unique name
+        /// </summary>
         [Required]
         public string Name { get; set; }
     }

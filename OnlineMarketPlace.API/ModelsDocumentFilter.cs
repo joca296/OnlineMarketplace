@@ -13,7 +13,7 @@ namespace OnlineMarketPlace.API
         public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context)
         {
             context.SchemaRegistry.GetOrRegister(typeof(CreateUserDto));
-            context.SchemaRegistry.GetOrRegister(typeof(CreateRoleDto));
+            context.SchemaRegistry.GetOrRegister(typeof(RoleDto));
             context.SchemaRegistry.GetOrRegister(typeof(ShippingAddressDto));
             context.SchemaRegistry.GetOrRegister(typeof(CreateCategotyDto));
             context.SchemaRegistry.GetOrRegister(typeof(CreateSubCategoryDto));

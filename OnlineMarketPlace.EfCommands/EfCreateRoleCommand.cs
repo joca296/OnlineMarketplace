@@ -16,7 +16,7 @@ namespace OnlineMarketPlace.EfCommands
         {
         }
 
-        public void Execute(CreateRoleDto request)
+        public void Execute(RoleDto request)
         {
             if (Validate(request))
             {
@@ -31,7 +31,7 @@ namespace OnlineMarketPlace.EfCommands
             }
         }
 
-        public bool Validate(CreateRoleDto request)
+        public bool Validate(RoleDto request)
         {
             if (_context.Roles.Any(x => x.Name.Trim().ToLower() == request.Name.Trim().ToLower()))
                 throw new EntityAlreadyExistsException("Role with name:" + request.Name);

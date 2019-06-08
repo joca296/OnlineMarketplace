@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace OnlineMarketPlace.Application.Commands
 {
-    public interface ICreateRoleCommand : ICommand<CreateRoleDto>
+    public interface ICreateRoleCommand : ICommand<RoleDto>
     {
     }
 }

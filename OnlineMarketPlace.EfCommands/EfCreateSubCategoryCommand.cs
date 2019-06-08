@@ -35,7 +35,13 @@ namespace OnlineMarketPlace.EfCommands
             if (_context.Categories.Find(request.CategoryId) == null)
                 throw new EntityNotFoundException("Category with id: " + request.CategoryId);
 
-            if (_context.SubCategories.Any(x => x.Name.Trim().ToLower() == request.Name.Trim().ToLower()))
+            if (_context.SubCategories.Any
+                (
+                x => 
+                (x.Name.Trim().ToLower() == request.Name.Trim().ToLower()) && 
+                (x.Category.Id == request.CategoryId)
+                )
+            )
                 throw new EntityAlreadyExistsException("Sub Category with name:" + request.Name);
 
             return true;
