@@ -23,14 +23,15 @@ namespace OnlineMarketPlace.EfCommands
                 double totalPrice = 0, totalFreight = 0;
 
                 bool freeShipping = false;
-                foreach (var couponCode in request.CouponCodes)
-                {
-                    if (_context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)).FreeShipping)
+                if (request.CouponCodes != null)
+                    foreach (var couponCode in request.CouponCodes)
                     {
-                        freeShipping = true;
-                        break;
+                        if (_context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)).FreeShipping)
+                        {
+                            freeShipping = true;
+                            break;
+                        }
                     }
-                }
 
                 if (!freeShipping)
                     totalFreight = _context.Shippers.Find(request.ShipperId).FreightBase.GetValueOrDefault(0);
@@ -47,11 +48,12 @@ namespace OnlineMarketPlace.EfCommands
                     i++;
                 }
 
-                foreach (var couponCode in request.CouponCodes)
-                {
-                    double discount = _context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)).Discount;
-                    totalPrice -= totalPrice * (discount / 100);
-                }
+                if (request.CouponCodes != null)
+                    foreach (var couponCode in request.CouponCodes)
+                    {
+                        double discount = _context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)).Discount;
+                        totalPrice -= totalPrice * (discount / 100);
+                    }
 
                 var newOrder = new Orders
                 {
@@ -64,14 +66,15 @@ namespace OnlineMarketPlace.EfCommands
                     TotalFreight = totalFreight
                 };
 
-                foreach (var couponCode in request.CouponCodes)
-                    _context.OrderCoupons.Add(new OrderCoupons
-                    {
-                        Active = true,
-                        DateCreated = DateTime.Now,
-                        Coupon = _context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)),
-                        Order = newOrder
-                    });
+                if (request.CouponCodes != null)
+                    foreach (var couponCode in request.CouponCodes)
+                        _context.OrderCoupons.Add(new OrderCoupons
+                        {
+                            Active = true,
+                            DateCreated = DateTime.Now,
+                            Coupon = _context.Coupons.First(x => x.Code == Functions.CreateSha256Hash(couponCode)),
+                            Order = newOrder
+                        });
 
                 int j = 0;
                 foreach (var productId in request.ProductIds)
@@ -124,11 +127,11 @@ namespace OnlineMarketPlace.EfCommands
 
                 i++;
             }
-                
 
-            foreach (var couponCode in request.CouponCodes)
-                if (_context.Coupons.FirstOrDefault(x=> x.Code == Functions.CreateSha256Hash(couponCode)) == null)
-                    throw new EntityNotFoundException($"Coupon with code: {couponCode}");
+            if (request.CouponCodes != null)
+                foreach (var couponCode in request.CouponCodes)
+                    if (_context.Coupons.FirstOrDefault(x => x.Code == Functions.CreateSha256Hash(couponCode)) == null)
+                        throw new EntityNotFoundException($"Coupon with code: {couponCode}");
 
             return true;
         }

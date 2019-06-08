@@ -17,7 +17,7 @@ namespace OnlineMarketPlace.API
             context.SchemaRegistry.GetOrRegister(typeof(ShippingAddressDto));
             context.SchemaRegistry.GetOrRegister(typeof(CreateCategotyDto));
             context.SchemaRegistry.GetOrRegister(typeof(CreateSubCategoryDto));
-            context.SchemaRegistry.GetOrRegister(typeof(CreateProductDto));
+            context.SchemaRegistry.GetOrRegister(typeof(ProductDto));
             context.SchemaRegistry.GetOrRegister(typeof(CouponDto));
             context.SchemaRegistry.GetOrRegister(typeof(ShipperDto));
             context.SchemaRegistry.GetOrRegister(typeof(CreateOrderDto));
