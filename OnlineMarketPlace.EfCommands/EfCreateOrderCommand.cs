@@ -1,4 +1,5 @@
-﻿using OnlineMarketPlace.Application.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.DataAccess;
@@ -104,11 +105,11 @@ namespace OnlineMarketPlace.EfCommands
             if (_context.Users.Find(request.UserId) == null)
                 throw new EntityNotFoundException($"User with id: {request.UserId}");
 
-            var shippingAddress = _context.ShippingAddresses.Find(request.ShippingAddressId);
-            if (shippingAddress == null)
+            var shippingAddresses = _context.ShippingAddresses.Include(sa => sa.User).AsQueryable();
+            if (shippingAddresses.Where(sa => sa.Id == request.ShippingAddressId) == null)
                 throw new EntityNotFoundException($"Shipping address with id: {request.ShippingAddressId}");
 
-            if (shippingAddress.User.Id != request.UserId)
+            if (shippingAddresses.Where(sa=> sa.Id == request.ShippingAddressId && sa.User.Id == request.UserId) == null)
                 throw new EntityMissmatchException($"Shipping address with id: {request.ShippingAddressId}", $"User with id: {request.UserId}");
 
             if (request.ProductIds.Count != request.QuantityPerProduct.Count)

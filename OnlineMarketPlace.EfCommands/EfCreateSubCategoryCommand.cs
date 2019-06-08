@@ -1,4 +1,5 @@
-﻿using OnlineMarketPlace.Application.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.DataAccess;
@@ -35,12 +36,16 @@ namespace OnlineMarketPlace.EfCommands
             if (_context.Categories.Find(request.CategoryId) == null)
                 throw new EntityNotFoundException("Category with id: " + request.CategoryId);
 
-            if (_context.SubCategories.Any
-                (
-                x => 
-                (x.Name.Trim().ToLower() == request.Name.Trim().ToLower()) && 
-                (x.Category.Id == request.CategoryId)
-                )
+            if (_context.SubCategories
+                .Include(sc => sc.Category)
+                .AsQueryable()
+                .Where
+                    (
+                        x => 
+                        (x.Name.Trim().ToLower() == request.Name.Trim().ToLower()) && 
+                        (x.Category.Id == request.CategoryId)
+                    )
+                != null
             )
                 throw new EntityAlreadyExistsException("Sub Category with name:" + request.Name);
 

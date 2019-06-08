@@ -1,4 +1,5 @@
-﻿using OnlineMarketPlace.Application.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.DataAccess;
@@ -46,16 +47,20 @@ namespace OnlineMarketPlace.EfCommands
             
             if 
             (
-                _context.ShippingAddresses.Any
-                (
-                    x=>
-                    x.Country == request.Country &&
-                    x.State == request.State &&
-                    x.City == request.City &&
-                    x.Address == request.Address &&
-                    x.PostalCode == request.PostalCode &&
-                    x.User.Id == request.UserId
-                )
+                _context.ShippingAddresses
+                    .Include(sa=>sa.User)
+                    .AsQueryable()
+                    .Where
+                    (
+                        x=>
+                        x.Country == request.Country &&
+                        x.State == request.State &&
+                        x.City == request.City &&
+                        x.Address == request.Address &&
+                        x.PostalCode == request.PostalCode &&
+                        x.User.Id == request.UserId
+                    )
+                != null
             )
                 throw new EntityAlreadyExistsException("Shipping address");
 
