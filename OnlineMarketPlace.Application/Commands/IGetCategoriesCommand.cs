@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.Commands
 {
-    public interface ICreateSubCategoryCommand : ICommand<SubCategoryDto>
+    public interface IGetCategoriesCommand : ICommand<int?, IEnumerable<CategoryDto>>
     {
     }
 }

@@ -15,12 +15,14 @@ namespace OnlineMarketPlace.API.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICreateCategoryCommand _createCategory;
+        private readonly IGetCategoriesCommand _getCategories;
 
-        public CategoriesController(ICreateCategoryCommand createCategory)
+        public CategoriesController(ICreateCategoryCommand createCategory, IGetCategoriesCommand getCategories)
         {
             _createCategory = createCategory;
+            _getCategories = getCategories;
         }
-
+        
         /// <summary>
         /// Creates a new category
         /// </summary>
@@ -34,7 +36,7 @@ namespace OnlineMarketPlace.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public IActionResult Post([FromForm] CreateCategotyDto dto)
+        public IActionResult Post([FromForm] CategoryDto dto)
         {
             try
             {
@@ -44,6 +46,62 @@ namespace OnlineMarketPlace.API.Controllers
             catch (EntityAlreadyExistsException e)
             {
                 return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// Category with given id
+        /// </returns>
+        /// <response code="200">Successfully returned category</response>
+        /// <response code="404">Category with given id not found</response>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Category/id
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var results = _getCategories.Execute(id);
+                return Ok(results.First());
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get categories
+        /// </summary>
+        /// <returns>
+        /// List containing all categories in db if id is NULL, 
+        /// </returns>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Category
+        [HttpGet()]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var results = _getCategories.Execute(null);
+                return Ok(results);
             }
             catch (Exception e)
             {

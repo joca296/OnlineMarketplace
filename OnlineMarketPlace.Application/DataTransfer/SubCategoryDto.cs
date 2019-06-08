@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.DataTransfer
 {
-    public class CreateSubCategoryDto
+    public class SubCategoryDto
     {
         /// <summary>
         /// Must be a unique name

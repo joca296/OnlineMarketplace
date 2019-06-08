@@ -32,7 +32,7 @@ namespace OnlineMarketPlace.API.Controllers
         /// <response code="500">Other server errors</response>
         // POST: api/SubCategories
         [HttpPost]
-        public IActionResult Post([FromForm] CreateSubCategoryDto dto)
+        public IActionResult Post([FromForm] SubCategoryDto dto)
         {
             try
             {

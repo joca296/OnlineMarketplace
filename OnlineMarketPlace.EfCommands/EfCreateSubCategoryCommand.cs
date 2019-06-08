@@ -17,7 +17,7 @@ namespace OnlineMarketPlace.EfCommands
         {
         }
 
-        public void Execute(CreateSubCategoryDto request)
+        public void Execute(SubCategoryDto request)
         {
             
 
@@ -31,7 +31,7 @@ namespace OnlineMarketPlace.EfCommands
             _context.SaveChanges();
         }
 
-        public bool Validate(CreateSubCategoryDto request)
+        public bool Validate(SubCategoryDto request)
         {
             if (_context.Categories.Find(request.CategoryId) == null)
                 throw new EntityNotFoundException("Category with id: " + request.CategoryId);

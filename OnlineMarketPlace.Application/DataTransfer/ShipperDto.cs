@@ -17,5 +17,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
         public double FreightPerKilo { get; set; }
 
         public double? FreightBase { get; set; }
+
+        public int? Id { get; set; }
     }
 }

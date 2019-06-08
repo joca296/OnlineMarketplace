@@ -5,12 +5,14 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.DataTransfer
 {
-    public class CreateCategotyDto
+    public class CategoryDto
     {
         /// <summary>
         /// Must be a unique name
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+        public int? Id { get; set; }
     }
 }

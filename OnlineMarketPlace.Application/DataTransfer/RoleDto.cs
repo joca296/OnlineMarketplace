@@ -12,5 +12,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+        public int? Id { get; set; }
     }
 }

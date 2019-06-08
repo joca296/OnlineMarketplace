@@ -16,7 +16,7 @@ namespace OnlineMarketPlace.EfCommands
         {
         }
 
-        public void Execute(CreateCategotyDto request)
+        public void Execute(CategoryDto request)
         {
             if (Validate(request))
             {
@@ -33,7 +33,7 @@ namespace OnlineMarketPlace.EfCommands
             }
         }
 
-        public bool Validate(CreateCategotyDto request)
+        public bool Validate(CategoryDto request)
         {
             if (_context.Categories.Any(x => x.Name.Trim().ToLower() == request.Name.Trim().ToLower()))
                 throw new EntityAlreadyExistsException("Category with name:" + request.Name);
