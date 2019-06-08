@@ -28,7 +28,7 @@ namespace OnlineMarketPlace.API.Controllers
         /// <returns></returns>
         /// <response code="200">Order has been successfully entered into the database</response>
         /// <response code="404">The given user, shipping address, product or coupon code doesn't exist in the database</response>
-        /// <response code="400">Product count and QuantityPerProduct array don't match OR given product doesn't have enough units available for the order</response>
+        /// <response code="400">Product count and QuantityPerProduct array don't match OR given product doesn't have enough units available for the order OR invalid quantity input</response>
         /// <response code="422">The shipping address doesn't belong to the given user</response>
         /// <response code="500">Other server issues</response>
         // POST: api/Orders
@@ -57,6 +57,10 @@ namespace OnlineMarketPlace.API.Controllers
                 return UnprocessableEntity(e.Message);
             }
             catch (ProductNotAvailableException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (InvalidInputException e)
             {
                 return BadRequest(e.Message);
             }

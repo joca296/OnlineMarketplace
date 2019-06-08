@@ -25,8 +25,10 @@ namespace OnlineMarketPlace.Application.DataTransfer
         [Required]
         public List<int> ProductIds { get; set; }
 
+        /// <summary>
+        ///     Value must be at least 1
+        /// </summary>
         [Required]
-        [Range(1,1000000000)]
         public List<int> QuantityPerProduct { get; set; }
 
         public List<string> CouponCodes { get; set; }

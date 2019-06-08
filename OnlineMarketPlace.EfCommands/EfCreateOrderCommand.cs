@@ -111,9 +111,13 @@ namespace OnlineMarketPlace.EfCommands
 
             if (shippingAddresses.Where(sa=> sa.Id == request.ShippingAddressId && sa.User.Id == request.UserId) == null)
                 throw new EntityMissmatchException($"Shipping address with id: {request.ShippingAddressId}", $"User with id: {request.UserId}");
-
+            
             if (request.ProductIds.Count != request.QuantityPerProduct.Count)
                 throw new EntityMissmatchException("Product count", "Quantity per product");
+
+            foreach (var quant in request.QuantityPerProduct)
+                if (quant <= 0)
+                    throw new InvalidInputException("Quantity must be at least one");
 
             int i = 0;
             foreach (var productId in request.ProductIds)
