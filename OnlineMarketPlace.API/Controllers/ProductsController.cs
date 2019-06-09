@@ -10,6 +10,7 @@ using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.Application.Helpers;
+using OnlineMarketPlace.Application.Searches;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -18,10 +19,12 @@ namespace OnlineMarketPlace.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ICreateProductCommand _createProduct;
+        private readonly IGetProductsCommand _getProducts;
 
-        public ProductsController(ICreateProductCommand createProduct)
+        public ProductsController(ICreateProductCommand createProduct, IGetProductsCommand getProducts)
         {
             _createProduct = createProduct;
+            _getProducts = getProducts;
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace OnlineMarketPlace.API.Controllers
                     productAlts.Add(newFileName);
                 }
 
-                var dto = new ProductDto
+                var dto = new CreateProductDto
                 {
                     Name = p.Name,
                     Description = p.Description,
@@ -91,6 +94,71 @@ namespace OnlineMarketPlace.API.Controllers
             catch (EntityMissmatchException e)
             {
                 return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get product by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// one user with given id
+        /// </returns>
+        /// <response code="200">Successfully returned product</response>
+        /// <response code="404">Product with given id not found</response>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Role/id
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var search = new ProductSearch
+                {
+                    Id = id
+                };
+                var result = _getProducts.Execute(search);
+                return Ok(result.First());
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get products
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">List containing all products in db with given search criteria</response>
+        /// <response code="404">No products found in db based on search criteria</response>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Role
+        [HttpGet()]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult GetAll([FromQuery] ProductSearch search)
+        {
+            try
+            {
+                var results = _getProducts.Execute(search);
+                return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {

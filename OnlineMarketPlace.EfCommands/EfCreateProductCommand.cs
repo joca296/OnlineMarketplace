@@ -17,7 +17,7 @@ namespace OnlineMarketPlace.EfCommands
         {
         }
 
-        public void Execute(ProductDto request)
+        public void Execute(CreateProductDto request)
         {
             if (Validate(request))
             {
@@ -60,7 +60,7 @@ namespace OnlineMarketPlace.EfCommands
             }
         }
 
-        public bool Validate(ProductDto request)
+        public bool Validate(CreateProductDto request)
         {
             if (!_context.Categories.Any(x => x.Id == request.CategoryId))
                 throw new EntityNotFoundException($"Category with id: {request.CategoryId}");

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OnlineMarketPlace.Application.DataTransfer
 {
-    public class ProductDto
+    public class CreateProductDto
     {
         /// <summary>
         /// Product name
