@@ -72,7 +72,7 @@ namespace OnlineMarketPlace.EfCommands
                 .Include(sc => sc.Category)
                 .AsQueryable()
                 .Where(sc => sc.Id == request.SubCategoryId && sc.Category.Id == request.CategoryId);
-            if (y == null)
+            if (y.Count() == 0)
                 throw new EntityMissmatchException($"Subcategory with id: {request.SubCategoryId}", $"Category with id: {request.CategoryId}");
 
             return true;

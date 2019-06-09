@@ -27,7 +27,7 @@ namespace OnlineMarketPlace.EfCommands
             else
                 roles = roles.Where(x=> x.Id == request.Id);
 
-            if (roles == null)
+            if (roles.Count() == 0)
                 throw new EntityNotFoundException($"Roles");
 
             foreach (var role in roles)

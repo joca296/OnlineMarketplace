@@ -45,7 +45,8 @@ namespace OnlineMarketPlace.EfCommands
                         (x.Name.Trim().ToLower() == request.Name.Trim().ToLower()) && 
                         (x.Category.Id == request.CategoryId)
                     )
-                != null
+                .Count()
+                != 0
             )
                 throw new EntityAlreadyExistsException("Sub Category with name:" + request.Name);
 

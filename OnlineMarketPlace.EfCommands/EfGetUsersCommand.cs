@@ -45,7 +45,7 @@ namespace OnlineMarketPlace.EfCommands
                     users = users.Where(u => u.Email.Equals(request.Email));
             }
 
-            if (users == null)
+            if (users.Count() == 0)
                 throw new EntityNotFoundException("Users");
 
             List<GetUserDto> userDtos = users.Select(u => new GetUserDto {

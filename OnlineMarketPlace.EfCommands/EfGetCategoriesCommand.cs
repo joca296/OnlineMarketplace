@@ -28,7 +28,7 @@ namespace OnlineMarketPlace.EfCommands
             else
                 categories = categories.Where(x=> x.Id == request.Id);
 
-            if (categories == null)
+            if (categories.Count() == 0)
                 throw new EntityNotFoundException($"Categories");
 
             foreach (var category in categories)

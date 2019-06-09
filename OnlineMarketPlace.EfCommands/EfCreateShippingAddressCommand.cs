@@ -60,7 +60,8 @@ namespace OnlineMarketPlace.EfCommands
                         x.PostalCode == request.PostalCode &&
                         x.User.Id == request.UserId
                     )
-                != null
+                    .Count()
+                != 0
             )
                 throw new EntityAlreadyExistsException("Shipping address");
 

@@ -41,7 +41,7 @@ namespace OnlineMarketPlace.EfCommands
             else
                 shippers = shippers.Where(x=> x.Id == request.Id);
 
-            if (shippers == null)
+            if (shippers.Count() == 0)
                 throw new EntityNotFoundException($"Shippers");
 
             foreach (var shipper in shippers)

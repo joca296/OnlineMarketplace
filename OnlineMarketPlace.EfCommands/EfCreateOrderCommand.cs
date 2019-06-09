@@ -106,10 +106,10 @@ namespace OnlineMarketPlace.EfCommands
                 throw new EntityNotFoundException($"User with id: {request.UserId}");
 
             var shippingAddresses = _context.ShippingAddresses.Include(sa => sa.User).AsQueryable();
-            if (shippingAddresses.Where(sa => sa.Id == request.ShippingAddressId) == null)
+            if (shippingAddresses.Where(sa => sa.Id == request.ShippingAddressId).Count() == 0)
                 throw new EntityNotFoundException($"Shipping address with id: {request.ShippingAddressId}");
 
-            if (shippingAddresses.Where(sa=> sa.Id == request.ShippingAddressId && sa.User.Id == request.UserId) == null)
+            if (shippingAddresses.Where(sa=> sa.Id == request.ShippingAddressId && sa.User.Id == request.UserId).Count() == 0)
                 throw new EntityMissmatchException($"Shipping address with id: {request.ShippingAddressId}", $"User with id: {request.UserId}");
             
             if (request.ProductIds.Count != request.QuantityPerProduct.Count)

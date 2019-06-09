@@ -35,7 +35,7 @@ namespace OnlineMarketPlace.EfCommands
             else
                 subCategories = subCategories.Where(x=> x.Id == request.Id);
 
-            if (subCategories == null)
+            if (subCategories.Count() == 0)
                 throw new EntityNotFoundException($"Subcategories");
 
             foreach (var subCategory in subCategories)
