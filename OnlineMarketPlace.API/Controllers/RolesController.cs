@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
+using OnlineMarketPlace.Application.Searches;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -54,7 +55,7 @@ namespace OnlineMarketPlace.API.Controllers
         }
 
         /// <summary>
-        /// Get role
+        /// Get role by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>
@@ -72,8 +73,12 @@ namespace OnlineMarketPlace.API.Controllers
         {
             try
             {
-                var results = _getRoles.Execute(id);
-                return Ok(results.First());
+                var search = new NameSearch
+                {
+                    Id = id
+                };
+                var result = _getRoles.Execute(search);
+                return Ok(result.First());
             }
             catch (EntityNotFoundException e)
             {
@@ -88,20 +93,23 @@ namespace OnlineMarketPlace.API.Controllers
         /// <summary>
         /// Get roles
         /// </summary>
-        /// <returns>
-        /// List containing all roles in db if id is NULL, 
-        /// </returns>
+        /// <returns></returns>
+        /// <response code="200">List containing all roles in db with given search criteria</response>
         /// <response code="500">Other server errors</response>
         // GET: api/Role
         [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] NameSearch search)
         {
             try
             {
-                var results = _getRoles.Execute(null);
+                var results = _getRoles.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {

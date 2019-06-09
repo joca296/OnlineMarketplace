@@ -1,9 +1,11 @@
 ﻿using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
+using OnlineMarketPlace.Application.Searches;
 using OnlineMarketPlace.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace OnlineMarketPlace.EfCommands
@@ -14,12 +16,20 @@ namespace OnlineMarketPlace.EfCommands
         {
         }
 
-        public IEnumerable<RoleDto> Execute(int? request)
+        public IEnumerable<RoleDto> Execute(NameSearch request)
         {
             List<RoleDto> roleDtos = new List<RoleDto>();
-            if (request == null)
+            
+            if(request.Id == null)
             {
-                foreach (var role in _context.Roles)
+                var roles = _context.Roles.AsQueryable();
+
+                if (request.Name != null)
+                {
+                    roles = roles.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
+                }
+
+                foreach (var role in roles)
                 {
                     var roleDto = new RoleDto
                     {
@@ -31,24 +41,23 @@ namespace OnlineMarketPlace.EfCommands
             }
             else
             {
-                var role = _context.Roles.Find(request);
+                var role = _context.Roles.Find(request.Id);
                 if (role == null)
-                    throw new EntityNotFoundException($"Role with id: {request}");
-                else
-                {
-                    var roleDto = new RoleDto
-                    {
-                        Id = role.Id,
-                        Name = role.Name
-                    };
-                    roleDtos.Add(roleDto);
-                }
+                    throw new EntityNotFoundException($"Role with id: {request.Id}");
 
+                var roleDto = new RoleDto
+                {
+                    Id = role.Id,
+                    Name = role.Name
+                };
+
+                roleDtos.Add(roleDto);
             }
+
             return roleDtos;
         }
 
-        public bool Validate(int? request)
+        public bool Validate(NameSearch request)
         {
             throw new NotImplementedException();
         }

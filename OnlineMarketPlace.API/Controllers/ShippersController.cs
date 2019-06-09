@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
+using OnlineMarketPlace.Application.Searches;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -53,7 +54,7 @@ namespace OnlineMarketPlace.API.Controllers
         }
 
         /// <summary>
-        /// Get shipper
+        /// Get shipper by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>
@@ -71,8 +72,12 @@ namespace OnlineMarketPlace.API.Controllers
         {
             try
             {
-                var results = _getShippers.Execute(id);
-                return Ok(results.First());
+                var search = new ShipperSearch
+                {
+                    Id = id
+                };
+                var result = _getShippers.Execute(search);
+                return Ok(result.First());
             }
             catch (EntityNotFoundException e)
             {
@@ -87,20 +92,23 @@ namespace OnlineMarketPlace.API.Controllers
         /// <summary>
         /// Get shippers
         /// </summary>
-        /// <returns>
-        /// List containing all shippers in db if id is NULL, 
-        /// </returns>
+        /// <returns></returns>
+        /// <response code="200">List containing all shippers in db with given search criteria</response>
         /// <response code="500">Other server errors</response>
         // GET: api/Shipper
         [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] ShipperSearch search)
         {
             try
             {
-                var results = _getShippers.Execute(null);
+                var results = _getShippers.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
