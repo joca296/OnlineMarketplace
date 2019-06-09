@@ -24,7 +24,7 @@ namespace OnlineMarketPlace.EfCommands
                 .Include(u => u.Role)
                 .Include(u => u.Orders)
                     .ThenInclude(o => o.OrderProducts)
-                        .ThenInclude(od => od.Product)
+                        .ThenInclude(op => op.Product)
                             .ThenInclude(p => p.SubCategory)
                                 .ThenInclude(sc => sc.Category)
                 .Include(u => u.Orders)

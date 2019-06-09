@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
+using OnlineMarketPlace.Application.Searches;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -14,11 +15,13 @@ namespace OnlineMarketPlace.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly ICreateOrderCommand _coreateOrder;
+        private readonly ICreateOrderCommand _createOrder;
+        private readonly IGetOrdersCommand _getOrders;
 
-        public OrdersController(ICreateOrderCommand coreateOrder)
+        public OrdersController(ICreateOrderCommand createOrder, IGetOrdersCommand getOrders)
         {
-            _coreateOrder = coreateOrder;
+            _createOrder = createOrder;
+            _getOrders = getOrders;
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace OnlineMarketPlace.API.Controllers
         {
             try
             {
-                _coreateOrder.Execute(dto);
+                _createOrder.Execute(dto);
                 return Ok();
             }
             catch (EntityNotFoundException e)
@@ -63,6 +66,71 @@ namespace OnlineMarketPlace.API.Controllers
             catch (InvalidInputException e)
             {
                 return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get order by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// one user with given id
+        /// </returns>
+        /// <response code="200">Successfully returned order</response>
+        /// <response code="404">Order with given id not found</response>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Role/id
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var search = new OrderSearch
+                {
+                    Id = id
+                };
+                var result = _getOrders.Execute(search);
+                return Ok(result.First());
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get orders
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">List containing all orders in db with given search criteria</response>
+        /// <response code="404">No orders found in db based on search criteria</response>
+        /// <response code="500">Other server errors</response>
+        // GET: api/Role
+        [HttpGet()]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult GetAll([FromQuery] OrderSearch search)
+        {
+            try
+            {
+                var results = _getOrders.Execute(search);
+                return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
