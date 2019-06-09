@@ -6,6 +6,6 @@ namespace OnlineMarketPlace.Application.Searches
 {
     public class SubCategorySearch : NameSearch
     {
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

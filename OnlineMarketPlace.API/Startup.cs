@@ -47,6 +47,7 @@ namespace OnlineMarketPlace.API
             services.AddTransient<IGetCategoriesCommand, EfGetCategoriesCommand>();
             services.AddTransient<IGetShippersCommand, EfGetShippersCommand>();
             services.AddTransient<IGetRolesCommand, EfGetRolesCommand>();
+            services.AddTransient<IGetSubCategoriesCommand, EfGetSubCategoriesCommand>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info

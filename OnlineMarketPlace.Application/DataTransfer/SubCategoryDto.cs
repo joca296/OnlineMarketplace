@@ -18,5 +18,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
         /// </summary>
         [Required]
         public int CategoryId { get; set; }
+
+        public int? Id { get; set; }
     }
 }
