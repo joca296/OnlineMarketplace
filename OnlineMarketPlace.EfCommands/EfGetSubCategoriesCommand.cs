@@ -20,42 +20,26 @@ namespace OnlineMarketPlace.EfCommands
         public IEnumerable<SubCategoryDto> Execute(SubCategorySearch request)
         {
             List<SubCategoryDto> subCategoryDtos = new List<SubCategoryDto>();
-
-            if (request.Id == null)
-            {
-                var subCategories = _context.SubCategories
+            var subCategories = _context.SubCategories
                     .Include(sc => sc.Category)
                     .AsQueryable();
 
+            if (request.Id == null)
+            {
                 if (request.Name != null)
                     subCategories = subCategories.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
 
                 if (request.CategoryId != null)
                     subCategories = subCategories.Where(x => x.Category.Id == request.CategoryId);
-
-                foreach(var subCategory in subCategories)
-                {
-                    var subCategoryDto = new SubCategoryDto
-                    {
-                        Id = subCategory.Id,
-                        Name = subCategory.Name,
-                        CategoryId = subCategory.Category.Id
-                    };
-
-                    subCategoryDtos.Add(subCategoryDto);
-                }
             }
             else
+                subCategories = subCategories.Where(x=> x.Id == request.Id);
+
+            if (subCategories == null)
+                throw new EntityNotFoundException($"Subcategories");
+
+            foreach (var subCategory in subCategories)
             {
-                var subCategory = _context.SubCategories
-                    .Include(sc=> sc.Category)
-                    .AsQueryable()
-                    .Where(x=> x.Id == request.Id)
-                    .First();
-
-                if (subCategory == null)
-                    throw new EntityNotFoundException($"Subcategory with id: {request.Id}");
-
                 var subCategoryDto = new SubCategoryDto
                 {
                     Id = subCategory.Id,

@@ -13,5 +13,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public int QuantityAvailable { get; set; }
         public Categories Category { get; set; }
         public SubCategories SubCategory { get; set; }
+        public ICollection<ProductImages> ProductImages { get; set; }
     }
 }

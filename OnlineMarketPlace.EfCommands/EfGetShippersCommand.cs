@@ -19,11 +19,10 @@ namespace OnlineMarketPlace.EfCommands
         public IEnumerable<ShipperDto> Execute(ShipperSearch request)
         {
             List<ShipperDto> shipperDtos = new List<ShipperDto>();
+            var shippers = _context.Shippers.AsQueryable();
 
-            if(request.Id == null)
+            if (request.Id == null)
             {
-                var shippers = _context.Shippers.AsQueryable();
-
                 if (request.Name != null)
                     shippers = shippers.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
 
@@ -38,25 +37,15 @@ namespace OnlineMarketPlace.EfCommands
 
                 if (request.MaxFreightBase != null)
                     shippers = shippers.Where(x => x.FreightPerKilo <= request.MaxFreightBase);
-
-                foreach (var shipper in shippers)
-                {
-                    var shipperDto = new ShipperDto
-                    {
-                        Id = shipper.Id,
-                        FreightPerKilo = shipper.FreightPerKilo,
-                        FreightBase = shipper.FreightBase,
-                        Name = shipper.Name
-                    };
-                    shipperDtos.Add(shipperDto);
-                }
             }
             else
-            {
-                var shipper = _context.Shippers.Find(request.Id);
-                if (shipper == null)
-                    throw new EntityNotFoundException($"Shipper with id: {request.Id}");
+                shippers = shippers.Where(x=> x.Id == request.Id);
 
+            if (shippers == null)
+                throw new EntityNotFoundException($"Shippers");
+
+            foreach (var shipper in shippers)
+            {
                 var shipperDto = new ShipperDto
                 {
                     Id = shipper.Id,

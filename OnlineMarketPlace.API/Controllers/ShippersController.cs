@@ -58,7 +58,6 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>
-        /// null if given id is invalid OR
         /// one shipper with given id
         /// </returns>
         /// <response code="200">Successfully returned shipper</response>
@@ -67,6 +66,7 @@ namespace OnlineMarketPlace.API.Controllers
         // GET: api/Shipper/id
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
@@ -94,10 +94,12 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <returns></returns>
         /// <response code="200">List containing all shippers in db with given search criteria</response>
+        /// <response code="404">No shippers found in db based on search criteria</response>
         /// <response code="500">Other server errors</response>
         // GET: api/Shipper
         [HttpGet()]
         [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult GetAll([FromQuery] ShipperSearch search)
         {

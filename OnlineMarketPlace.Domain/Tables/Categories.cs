@@ -7,5 +7,6 @@ namespace OnlineMarketPlace.Domain.Tables
     public class Categories : BaseTable
     {
         public string Name { get; set; }
+        public ICollection<SubCategories> SubCategories { get; set; }
     }
 }

@@ -20,38 +20,24 @@ namespace OnlineMarketPlace.EfCommands
         public IEnumerable<CategoryDto> Execute(NameSearch request)
         {
             List<CategoryDto> categoryDtos = new List<CategoryDto>();
+            var categories = _context.Categories.AsQueryable();
 
-            if(request.Id == null)
-            {
-                var categories = _context.Categories.AsQueryable();
-
+            if (request.Id == null)
                 if (request.Name != null)
-                {
                     categories = categories.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
-                }
-
-                foreach (var category in categories)
-                {
-                    var categoryDto = new CategoryDto
-                    {
-                        Id = category.Id,
-                        Name = category.Name
-                    };
-                    categoryDtos.Add(categoryDto);
-                }
-            }
             else
-            {
-                var category = _context.Categories.Find(request.Id);
-                if (category == null)
-                    throw new EntityNotFoundException($"Category with id: {request.Id}");
+                categories = categories.Where(x=> x.Id == request.Id);
 
+            if (categories == null)
+                throw new EntityNotFoundException($"Categories");
+
+            foreach (var category in categories)
+            {
                 var categoryDto = new CategoryDto
                 {
                     Id = category.Id,
                     Name = category.Name
                 };
-
                 categoryDtos.Add(categoryDto);
             }
 

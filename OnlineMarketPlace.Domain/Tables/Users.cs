@@ -11,5 +11,7 @@ namespace OnlineMarketPlace.Domain.Tables
         public string Email { get; set; }
         public string Password { get; set; }
         public Roles Role { get; set; }
+        public ICollection<Orders> Orders { get; set; }
+        public ICollection<ShippingAddresses> ShippingAddresses { get; set; }
     }
 }

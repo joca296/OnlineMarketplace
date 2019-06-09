@@ -97,10 +97,12 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <returns></returns>
         /// <response code="200">List containing all subcategories with given search criteria</response>
+        /// <response code="404">No subcategories found in db based on search criteria</response>
         /// <response code="500">Other server errors</response>
         // GET: api/Category
         [HttpGet()]
         [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult GetAll([FromQuery] SubCategorySearch search)
         {

@@ -59,7 +59,6 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>
-        /// null if given id is invalid OR
         /// one role with given id
         /// </returns>
         /// <response code="200">Successfully returned role</response>
@@ -68,6 +67,7 @@ namespace OnlineMarketPlace.API.Controllers
         // GET: api/Role/id
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
@@ -95,10 +95,12 @@ namespace OnlineMarketPlace.API.Controllers
         /// </summary>
         /// <returns></returns>
         /// <response code="200">List containing all roles in db with given search criteria</response>
+        /// <response code="404">No roles found in db based on search criteria</response>
         /// <response code="500">Other server errors</response>
         // GET: api/Role
         [HttpGet()]
         [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult GetAll([FromQuery] NameSearch search)
         {

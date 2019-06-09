@@ -13,5 +13,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public ShippingAddresses ShippingAddress { get; set; }
         public DateTime? DateShipped { get; set; }
         public DateTime? DateDelivered { get; set; }
+        public ICollection<OrderProducts> OrderProducts { get; set; }
     }
 }
