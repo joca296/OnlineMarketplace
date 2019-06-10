@@ -19,13 +19,15 @@ namespace OnlineMarketPlace.API.Controllers
         private readonly IActivateUserCommand _activateUser;
         private readonly ICreateShippingAddressCommand _createShippingAddress;
         private readonly IGetUsersCommand _getUsers;
+        private readonly IDeleteUserCommand _deleteUser;
 
-        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, ICreateShippingAddressCommand createShippingAddress, IGetUsersCommand getUsers)
+        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, ICreateShippingAddressCommand createShippingAddress, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser)
         {
             _createUser = createUser;
             _activateUser = activateUser;
             _createShippingAddress = createShippingAddress;
             _getUsers = getUsers;
+            _deleteUser = deleteUser;
         }
 
         /// <summary>
@@ -177,6 +179,35 @@ namespace OnlineMarketPlace.API.Controllers
             {
                 var results = _getUsers.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Soft-deletes a user with given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">User soft-deleted and his/her shipping addresses and orders</response>
+        /// <response code="404">No users found in db based on search criteria</response>
+        /// <response code="500">Other server errors</response>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _deleteUser.Execute(id);
+                return Ok();
             }
             catch (EntityNotFoundException e)
             {

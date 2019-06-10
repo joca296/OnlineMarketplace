@@ -167,9 +167,9 @@ namespace OnlineMarketPlace.API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-        
+
         /// <summary>
-        /// Delete product by id, cancels all orders containing the product and sends an email to the recipient of the order
+        /// Delete product by id, cancels all orders containing the product and sends an email to the recipient of the order if the order is not shipped
         /// </summary>
         /// <param name="id"></param>
         /// <returns>
@@ -204,7 +204,7 @@ namespace OnlineMarketPlace.API.Controllers
         }
 
         /// <summary>
-        /// Delete products, cancels all orders containing the product and sends an email to the recipient of the order
+        /// Delete products, cancels all orders containing the product and sends an email to the recipient of the order if the order is not shipped
         /// </summary>
         /// <returns></returns>
         /// <response code="200">Deleted all products in db with given search criteria</response>
