@@ -17,11 +17,13 @@ namespace OnlineMarketPlace.API.Controllers
     {
         private readonly ICreateOrderCommand _createOrder;
         private readonly IGetOrdersCommand _getOrders;
+        private readonly IDeleteOrdersCommand _deleteOrders;
 
-        public OrdersController(ICreateOrderCommand createOrder, IGetOrdersCommand getOrders)
+        public OrdersController(ICreateOrderCommand createOrder, IGetOrdersCommand getOrders, IDeleteOrdersCommand deleteOrders)
         {
             _createOrder = createOrder;
             _getOrders = getOrders;
+            _deleteOrders = deleteOrders;
         }
 
         /// <summary>
@@ -127,6 +129,70 @@ namespace OnlineMarketPlace.API.Controllers
             {
                 var results = _getOrders.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Delete order by id, sends an email to the recipient if the order is not shipped
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// </returns>
+        /// <response code="200">Successfully soft-deleted order</response>
+        /// <response code="404">Order with given id not found</response>
+        /// <response code="500">Other server errors</response>
+        // DELETE: api/Products/id
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var search = new OrderSearch
+                {
+                    Id = id
+                };
+                _deleteOrders.Execute(search);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Delete orders, sends an email to the recipient if the order is not shipped
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Deleted all orders in db with given search criteria</response>
+        /// <response code="404">No orders found in db based on search criteria</response>
+        /// <response code="500">Other server errors</response>
+        // DELETE: api/Products
+        [HttpDelete()]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult DeleteAll([FromQuery] OrderSearch search)
+        {
+            try
+            {
+                _deleteOrders.Execute(search);
+                return Ok();
             }
             catch (EntityNotFoundException e)
             {
