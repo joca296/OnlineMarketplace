@@ -17,11 +17,15 @@ namespace OnlineMarketPlace.API.Controllers
     {
         private readonly ICreateShipperCommand _createShipper;
         private readonly IGetShippersCommand _getShippers;
+        private readonly IEditShipperCommand _editShippers;
+        private readonly IDeleteShipperCommand _deleteShipper;
 
-        public ShippersController(ICreateShipperCommand createShipper, IGetShippersCommand getShippers)
+        public ShippersController(ICreateShipperCommand createShipper, IGetShippersCommand getShippers, IEditShipperCommand editShippers, IDeleteShipperCommand deleteShipper)
         {
             _createShipper = createShipper;
             _getShippers = getShippers;
+            _editShippers = editShippers;
+            _deleteShipper = deleteShipper;
         }
 
         /// <summary>
@@ -107,6 +111,66 @@ namespace OnlineMarketPlace.API.Controllers
             {
                 var results = _getShippers.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Soft-delete a shipper with given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Shipper soft-deleted from db with given id</response>
+        /// <response code="404">No shippers found in db with given id</response>
+        /// <response code="500">Other server errors</response>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _deleteShipper.Execute(id);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update shipper information
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <response code="200">Updated shipper information</response>
+        /// <response code="404">No shippers found in db with given id</response>
+        /// <response code="500">Other server errors</response>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Edit(int id, [FromForm] ShipperDto dto)
+        {
+            dto.Id = id;
+            try
+            {
+                _editShippers.Execute(dto);
+                return Ok();
             }
             catch (EntityNotFoundException e)
             {

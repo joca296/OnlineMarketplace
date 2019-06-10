@@ -12,7 +12,7 @@ namespace OnlineMarketPlace.Application.Exceptions
         }
 
         public EntityNotFoundException(string entity)
-            : base (entity+" doesn't exist")
+            : base (entity+" not found")
         {
 
         }
