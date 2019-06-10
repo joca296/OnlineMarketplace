@@ -20,11 +20,13 @@ namespace OnlineMarketPlace.API.Controllers
     {
         private readonly ICreateProductCommand _createProduct;
         private readonly IGetProductsCommand _getProducts;
+        private readonly IDeleteProductsCommand _deleteProducts;
 
-        public ProductsController(ICreateProductCommand createProduct, IGetProductsCommand getProducts)
+        public ProductsController(ICreateProductCommand createProduct, IGetProductsCommand getProducts, IDeleteProductsCommand deleteProducts)
         {
             _createProduct = createProduct;
             _getProducts = getProducts;
+            _deleteProducts = deleteProducts;
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace OnlineMarketPlace.API.Controllers
         /// <response code="200">Successfully returned product</response>
         /// <response code="404">Product with given id not found</response>
         /// <response code="500">Other server errors</response>
-        // GET: api/Role/id
+        // GET: api/Products/id
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -144,7 +146,7 @@ namespace OnlineMarketPlace.API.Controllers
         /// <response code="200">List containing all products in db with given search criteria</response>
         /// <response code="404">No products found in db based on search criteria</response>
         /// <response code="500">Other server errors</response>
-        // GET: api/Role
+        // GET: api/Products
         [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -155,6 +157,70 @@ namespace OnlineMarketPlace.API.Controllers
             {
                 var results = _getProducts.Execute(search);
                 return Ok(results);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Delete product by id, cancels all orders containing the product and sends an email to the recipient of the order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// </returns>
+        /// <response code="200">Successfully soft-deleted product</response>
+        /// <response code="404">Product with given id not found</response>
+        /// <response code="500">Other server errors</response>
+        // DELETE: api/Products/id
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var search = new ProductSearch
+                {
+                    Id = id
+                };
+                _deleteProducts.Execute(search);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Delete products, cancels all orders containing the product and sends an email to the recipient of the order
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Deleted all products in db with given search criteria</response>
+        /// <response code="404">No products found in db based on search criteria</response>
+        /// <response code="500">Other server errors</response>
+        // DELETE: api/Products
+        [HttpDelete()]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult DeleteAll([FromQuery] ProductSearch search)
+        {
+            try
+            {
+                _deleteProducts.Execute(search);
+                return Ok();
             }
             catch (EntityNotFoundException e)
             {

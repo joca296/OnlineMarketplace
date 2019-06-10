@@ -14,5 +14,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public DateTime? DateShipped { get; set; }
         public DateTime? DateDelivered { get; set; }
         public ICollection<OrderProducts> OrderProducts { get; set; }
+        public ICollection<OrderCoupons> OrderCoupons { get; set; }
     }
 }
