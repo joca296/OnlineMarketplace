@@ -55,7 +55,10 @@ namespace OnlineMarketPlace.API
             services.AddTransient<IDeleteOrdersCommand, EfDeleteOrdersCommand>();
             services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
             services.AddTransient<IDeleteShipperCommand, EfDeleteShipperCommand>();
-            services.AddTransient<IEditShipperCommand, EfEditShipperCommand>();
+            services.AddTransient<IEditShipperCommand, EfEditShipperCommand>(); 
+            services.AddTransient<IDeleteShippingAddressCommand, EfDeleteShippingAddressCommand>(); 
+            services.AddTransient<IGetShippingAddressesCommand, EfGetShippingAddressesCommand>(); 
+            services.AddTransient<IEditShippingAddressCommand, EfEditShippingAddressesCommand>(); 
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info

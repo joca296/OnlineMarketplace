@@ -17,15 +17,13 @@ namespace OnlineMarketPlace.API.Controllers
     {
         private readonly ICreateUserCommand _createUser;
         private readonly IActivateUserCommand _activateUser;
-        private readonly ICreateShippingAddressCommand _createShippingAddress;
         private readonly IGetUsersCommand _getUsers;
         private readonly IDeleteUserCommand _deleteUser;
 
-        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, ICreateShippingAddressCommand createShippingAddress, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser)
+        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser)
         {
             _createUser = createUser;
             _activateUser = activateUser;
-            _createShippingAddress = createShippingAddress;
             _getUsers = getUsers;
             _deleteUser = deleteUser;
         }
@@ -88,43 +86,7 @@ namespace OnlineMarketPlace.API.Controllers
                 return StatusCode(500, e);
             }
         }
-
-        /// <summary>
-        /// Add a shipping address to a user, assuming the user entered valid locations
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        /// <response code="200">Shipping address has been successfully added to database</response>
-        /// <response code="422">The given user ID doesn't exist in the database</response>
-        /// <response code="409">A shipping address already exists in the database that belongs to the user with given ID</response>
-        /// <response code="500">Other server errors</response>
-        // POST: api/Users/ShippingAddresses
-        [HttpPost("ShippingAddresses")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(422)]
-        [ProducesResponseType(409)]
-        [ProducesResponseType(500)]
-        public IActionResult AddShippingAddress([FromForm] ShippingAddressDto dto)
-        {
-            try
-            {
-                _createShippingAddress.Execute(dto);
-                return Ok();
-            }
-            catch (EntityNotFoundException e)
-            {
-                return UnprocessableEntity(e.Message);
-            }
-            catch (EntityAlreadyExistsException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e);
-            }
-        }
-
+        
         /// <summary>
         /// Get user by id
         /// </summary>

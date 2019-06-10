@@ -7,6 +7,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
 {
     public class ShippingAddressDto
     {
+        public int? ShippingAddressId { get; set; }
         [Required]
         public int UserId { get; set; }
         [Required]

@@ -12,5 +12,6 @@ namespace OnlineMarketPlace.Domain.Tables
         public string City { get; set; }
         public string Address { get; set; }
         public string PostalCode { get; set; }
+        public ICollection<Orders> Orders { get; set; }
     }
 }
