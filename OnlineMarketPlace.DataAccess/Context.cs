@@ -33,6 +33,23 @@ namespace OnlineMarketPlace.DataAccess
         {
             optionsBuilder.UseSqlServer("Data Source=" + Host + ";Initial Catalog=" + Db + ";Persist Security Info=True;User ID=" + DbUser + ";Password=" + DbPassword);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Users>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<ShippingAddresses>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Roles>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Categories>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<SubCategories>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Images>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Products>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<ProductImages>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Coupons>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Shippers>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<Orders>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<OrderProducts>().HasQueryFilter(x => x.Active);
+            modelBuilder.Entity<OrderCoupons>().HasQueryFilter(x => x.Active);
+        }
         
         public Context(string host, string db, string dbUser, string dbPassword)
         {

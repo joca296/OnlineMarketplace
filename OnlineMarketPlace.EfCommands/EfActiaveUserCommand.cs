@@ -1,4 +1,5 @@
-﻿using OnlineMarketPlace.Application.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.DataAccess;
 using OnlineMarketPlace.Domain.Tables;
@@ -19,7 +20,7 @@ namespace OnlineMarketPlace.EfCommands
         {
             if (Validate(request))
             {
-                var user = _context.Users.First(x => x.Key == request);
+                var user = _context.Users.IgnoreQueryFilters().First(x => x.Key == request);
 
                 user.Active = true;
                 user.DateUpdated = DateTime.Now;
@@ -31,7 +32,7 @@ namespace OnlineMarketPlace.EfCommands
 
         public bool Validate(string request)
         {
-            if (!_context.Users.Any(x => x.Key == request))
+            if (!_context.Users.IgnoreQueryFilters().Any(x => x.Key == request))
                 throw new EntityNotFoundException("User with key: " + request);
 
             return true;
