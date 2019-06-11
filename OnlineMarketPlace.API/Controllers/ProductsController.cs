@@ -21,12 +21,14 @@ namespace OnlineMarketPlace.API.Controllers
         private readonly ICreateProductCommand _createProduct;
         private readonly IGetProductsCommand _getProducts;
         private readonly IDeleteProductsCommand _deleteProducts;
+        private readonly IEditProductCommand _editProduct;
 
-        public ProductsController(ICreateProductCommand createProduct, IGetProductsCommand getProducts, IDeleteProductsCommand deleteProducts)
+        public ProductsController(ICreateProductCommand createProduct, IGetProductsCommand getProducts, IDeleteProductsCommand deleteProducts, IEditProductCommand editProduct)
         {
             _createProduct = createProduct;
             _getProducts = getProducts;
             _deleteProducts = deleteProducts;
+            _editProduct = editProduct;
         }
 
         /// <summary>
@@ -231,6 +233,79 @@ namespace OnlineMarketPlace.API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+        /// <summary>
+        /// Edit a product by id, editing images is optional
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Successfully edited a product, if you uploaded images, old images are soft-deleted and replaced with new ones</response>
+        /// <response code="400">One of the uploaded files is not an image</response>
+        /// <response code="404">Product, category or subcategory not found in db</response>
+        /// <response code="409">Category and subcategory don't match</response>
+        /// <response code="500">Other server errors</response>
+        // DELETE: api/Products
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public IActionResult Edit(int id, [FromQuery] ProductEdit p)
+        {
+            try
+            {
+                List<string> productPaths = new List<string>();
+                List<string> productAlts = new List<string>();
+
+                if (p.Images.Count != 0)
+                    foreach (var image in p.Images)
+                    {
+                        var extension = Path.GetExtension(image.FileName);
+
+                        if (!ImageUploadHelper.AllowedExtensions.Contains(extension))
+                            return BadRequest("One of the files is not an image");
+
+                        if (image.Length > ImageUploadHelper.MaxSize)
+                            return BadRequest("One of the images is too large for uploading. Max = 8MB");
+
+                        var newFileName = DateTime.Now.ToBinary().ToString() + "_" + image.FileName;
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
+                        image.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                        productPaths.Add(filePath.ToString());
+                        productAlts.Add(newFileName);
+                    }
+
+                var dto = new CreateProductDto
+                {
+                    Name = p.Name,
+                    Description = p.Description,
+                    UnitPrice = p.UnitPrice,
+                    UnitWeight = p.UnitWeight,
+                    QuantityAvailable = p.QuantityAvailable,
+                    CategoryId = p.CategoryId,
+                    SubCategoryId = p.SubCategoryId,
+                    ImagePaths = productPaths,
+                    ImageAlts = productAlts,
+                    Id = id
+                };
+
+                _editProduct.Execute(dto);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (EntityMissmatchException e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 
     public class Product
@@ -288,6 +363,63 @@ namespace OnlineMarketPlace.API.Controllers
         /// Accepts multiple images, current swagger UI spec doesn't support multi file upload, use postman or similar for testing
         /// </summary>
         [Required]
+        public IFormFileCollection Images { get; set; }
+    }
+
+    public class ProductEdit
+    {
+        /// <summary>
+        /// Product name
+        /// </summary>
+        [Required]
+        public string Name { get; set; }
+
+
+        /// <summary>
+        /// Product description
+        /// </summary>
+        [Required]
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Price in euros
+        /// </summary>
+        [Required]
+        [Range(0.01, 1000000000)]
+        public double UnitPrice { get; set; }
+
+        /// <summary>
+        /// Weight in kgs
+        /// </summary>
+        [Required]
+        [Range(0.001, 100000000000)]
+        public double UnitWeight { get; set; }
+
+        /// <summary>
+        /// Add initial quantity
+        /// </summary>
+        [Required]
+        [Range(1, 100000000)]
+        public int QuantityAvailable { get; set; }
+
+
+        /// <summary>
+        /// Category Id must exist in the db
+        /// </summary>
+        [Required]
+        public int CategoryId { get; set; }
+
+
+        /// <summary>
+        /// SubCategory ID must exist in the db and must match the given category ID
+        /// </summary>
+        [Required]
+        public int SubCategoryId { get; set; }
+
+
+        /// <summary>
+        /// Optional, Accepts multiple images, current swagger UI spec doesn't support multi file upload, use postman or similar for testing
+        /// </summary>
         public IFormFileCollection Images { get; set; }
     }
 }

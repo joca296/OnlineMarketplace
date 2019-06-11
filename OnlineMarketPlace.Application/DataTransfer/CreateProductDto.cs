@@ -57,5 +57,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
 
         public List<string> ImagePaths { get; set; }
         public List<string> ImageAlts { get; set; }
+
+        public int? Id { get; set; }
     }
 }
