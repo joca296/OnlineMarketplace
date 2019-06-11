@@ -19,13 +19,17 @@ namespace OnlineMarketPlace.API.Controllers
         private readonly IActivateUserCommand _activateUser;
         private readonly IGetUsersCommand _getUsers;
         private readonly IDeleteUserCommand _deleteUser;
+        private readonly IEditUserEmailCommand _editUserEmail;
+        private readonly IEditUserPasswordCommand _editUserPassword;
 
-        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser)
+        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser, IEditUserEmailCommand editUserEmail, IEditUserPasswordCommand editUserPassword)
         {
             _createUser = createUser;
             _activateUser = activateUser;
             _getUsers = getUsers;
             _deleteUser = deleteUser;
+            _editUserEmail = editUserEmail;
+            _editUserPassword = editUserPassword;
         }
 
         /// <summary>
@@ -174,6 +178,74 @@ namespace OnlineMarketPlace.API.Controllers
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edit user password
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <response code="200">User successfully changed password</response>
+        /// <response code="404">No users found in db</response>
+        /// <response code="500">Other server errors</response>
+        [HttpPut("{id}/ChangePassword")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult ChangePassword(int id, [FromForm] ChangePasswordDto dto)
+        {
+            try
+            {
+                dto.UserId = id;
+                _editUserPassword.Execute(dto);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edit user email address
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <response code="200">User successfully changed email</response>
+        /// <response code="404">No users found in db</response>
+        /// <response code="409">Email address already exists in db</response>
+        /// <response code="500">Other server errors</response>
+        [HttpPut("{id}/ChangeEmail")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public IActionResult ChangeEmail(int id, [FromForm] ChangeEmailDto dto)
+        {
+            try
+            {
+                dto.UserId = id;
+                _editUserEmail.Execute(dto);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                return Conflict(e.Message);
             }
             catch (Exception e)
             {
