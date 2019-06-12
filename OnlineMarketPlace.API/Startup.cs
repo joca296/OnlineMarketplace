@@ -34,33 +34,36 @@ namespace OnlineMarketPlace.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<Context>();
-            services.AddTransient<ICreateUserCommand, EfCreateUserCommand>();
-            services.AddTransient<ICreateRoleCommand, EfCreateRoleCommand>();
-            services.AddTransient<ICreateCategoryCommand, EfCreateCategoryCommand>();
-            services.AddTransient<ICreateSubCategoryCommand, EfCreateSubCategoryCommand>();
             services.AddTransient<IActivateUserCommand, EfActiaveUserCommand>();
-            services.AddTransient<ICreateShippingAddressCommand, EfCreateShippingAddressCommand>();
-            services.AddTransient<ICreateOrderCommand, EfCreateOrderCommand>();
+            services.AddTransient<IAuthenticateUserCommand, EfAuthenticateUserCommand>();
+            services.AddTransient<ICreateCategoryCommand, EfCreateCategoryCommand>();
             services.AddTransient<ICreateCouponCommand, EfCreateCouponCommand>();
-            services.AddTransient<ICreateShipperCommand, EfCreateShipperCommand>();
+            services.AddTransient<ICreateOrderCommand, EfCreateOrderCommand>();
             services.AddTransient<ICreateProductCommand, EfCreateProductCommand>();
+            services.AddTransient<ICreateRoleCommand, EfCreateRoleCommand>();
+            services.AddTransient<ICreateShipperCommand, EfCreateShipperCommand>();
+            services.AddTransient<ICreateShippingAddressCommand, EfCreateShippingAddressCommand>();
+            services.AddTransient<ICreateSubCategoryCommand, EfCreateSubCategoryCommand>();
+            services.AddTransient<ICreateUserCommand, EfCreateUserCommand>();
+            services.AddTransient<IDeleteOrdersCommand, EfDeleteOrdersCommand>();
+            services.AddTransient<IDeleteProductsCommand, EfDeleteProductsCommand>();
+            services.AddTransient<IDeleteShipperCommand, EfDeleteShipperCommand>();
+            services.AddTransient<IDeleteShippingAddressCommand, EfDeleteShippingAddressCommand>();
+            services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
+            services.AddTransient<IEditProductCommand, EfEditProductCommand>();
+            services.AddTransient<IEditShipperCommand, EfEditShipperCommand>();
+            services.AddTransient<IEditShippingAddressCommand, EfEditShippingAddressesCommand>();
+            services.AddTransient<IEditUserEmailCommand, EfEditUserEmailCommand>();
+            services.AddTransient<IEditUserPasswordCommand, EfEditUserPasswordCommand>();
             services.AddTransient<IGetCategoriesCommand, EfGetCategoriesCommand>();
-            services.AddTransient<IGetShippersCommand, EfGetShippersCommand>();
-            services.AddTransient<IGetRolesCommand, EfGetRolesCommand>();
-            services.AddTransient<IGetSubCategoriesCommand, EfGetSubCategoriesCommand>();
-            services.AddTransient<IGetUsersCommand, EfGetUsersCommand>();
             services.AddTransient<IGetOrdersCommand, EfGetOrdersCommand>();
             services.AddTransient<IGetProductsCommand, EfGetProductsCommand>();
-            services.AddTransient<IDeleteProductsCommand, EfDeleteProductsCommand>();
-            services.AddTransient<IDeleteOrdersCommand, EfDeleteOrdersCommand>();
-            services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
-            services.AddTransient<IDeleteShipperCommand, EfDeleteShipperCommand>();
-            services.AddTransient<IEditShipperCommand, EfEditShipperCommand>(); 
-            services.AddTransient<IDeleteShippingAddressCommand, EfDeleteShippingAddressCommand>(); 
-            services.AddTransient<IGetShippingAddressesCommand, EfGetShippingAddressesCommand>(); 
-            services.AddTransient<IEditShippingAddressCommand, EfEditShippingAddressesCommand>(); 
-            services.AddTransient<IEditProductCommand, EfEditProductCommand>(); 
-
+            services.AddTransient<IGetRolesCommand, EfGetRolesCommand>();
+            services.AddTransient<IGetShippersCommand, EfGetShippersCommand>();
+            services.AddTransient<IGetShippingAddressesCommand, EfGetShippingAddressesCommand>();
+            services.AddTransient<IGetSubCategoriesCommand, EfGetSubCategoriesCommand>();
+            services.AddTransient<IGetUsersCommand, EfGetUsersCommand>();
+            
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info
                 {
@@ -105,8 +108,7 @@ namespace OnlineMarketPlace.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineMarketPlace API v1");
                 c.RoutePrefix = string.Empty;
             });
-
-
+            
             app.UseMvc();
         }
     }

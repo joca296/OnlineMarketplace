@@ -21,8 +21,9 @@ namespace OnlineMarketPlace.API.Controllers
         private readonly IDeleteUserCommand _deleteUser;
         private readonly IEditUserEmailCommand _editUserEmail;
         private readonly IEditUserPasswordCommand _editUserPassword;
+        private readonly IAuthenticateUserCommand _authUser;
 
-        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser, IEditUserEmailCommand editUserEmail, IEditUserPasswordCommand editUserPassword)
+        public UsersController(ICreateUserCommand createUser, IActivateUserCommand activateUser, IGetUsersCommand getUsers, IDeleteUserCommand deleteUser, IEditUserEmailCommand editUserEmail, IEditUserPasswordCommand editUserPassword, IAuthenticateUserCommand authUser)
         {
             _createUser = createUser;
             _activateUser = activateUser;
@@ -30,6 +31,7 @@ namespace OnlineMarketPlace.API.Controllers
             _deleteUser = deleteUser;
             _editUserEmail = editUserEmail;
             _editUserPassword = editUserPassword;
+            _authUser = authUser;
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace OnlineMarketPlace.API.Controllers
         /// <response code="409">A user with the given email already exists</response>
         /// <response code="500">Other server errors</response>
         // POST: api/Users
-        [HttpPost]
+        [HttpPost()]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
@@ -246,6 +248,27 @@ namespace OnlineMarketPlace.API.Controllers
             catch (EntityAlreadyExistsException e)
             {
                 return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpPost("Authenticate")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult Authenticate([FromForm] LogInInfoDto dto)
+        {
+            try
+            {
+                var user = _authUser.Execute(dto);
+                return Ok(user);
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound("Invalid login info");
             }
             catch (Exception e)
             {

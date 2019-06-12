@@ -20,16 +20,13 @@ namespace OnlineMarketPlace.EfCommands
         {
             if (Validate(request))
             {
-                if (Validate(request))
+                _context.Categories.Add(new Categories
                 {
-                    _context.Categories.Add(new Categories
-                    {
-                        Active = true,
-                        DateCreated = DateTime.Now,
-                        Name = request.Name
-                    });
-                    _context.SaveChanges();
-                }
+                    Active = true,
+                    DateCreated = DateTime.Now,
+                    Name = request.Name
+                });
+                _context.SaveChanges();
             }
         }
 

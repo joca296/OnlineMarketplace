@@ -12,7 +12,7 @@ namespace OnlineMarketPlace.Application.DataTransfer
         [RegularExpression(@"(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$", ErrorMessage = "Password not strong enough.")]
         public string NewPassword { get; set; }
         [Required]
-        [Compare("Password", ErrorMessage = "Passwords don't match")]
+        [Compare("NewPassword", ErrorMessage = "Passwords don't match")]
         public string ConfirmNewPassword { get; set; }
     }
 }
