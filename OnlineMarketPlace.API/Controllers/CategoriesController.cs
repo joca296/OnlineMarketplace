@@ -106,6 +106,7 @@ namespace OnlineMarketPlace.API.Controllers
         {
             try
             {
+                
                 var results = _getCategories.Execute(search);
                 return Ok(results);
             }

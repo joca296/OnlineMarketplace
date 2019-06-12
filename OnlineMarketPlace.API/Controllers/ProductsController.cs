@@ -70,7 +70,7 @@ namespace OnlineMarketPlace.API.Controllers
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
                     image.CopyTo(new FileStream(filePath, FileMode.Create));
 
-                    productPaths.Add(filePath.ToString());
+                    productPaths.Add(@"uploads\"+newFileName);
                     productAlts.Add(newFileName);
                 }
 
@@ -272,7 +272,7 @@ namespace OnlineMarketPlace.API.Controllers
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
                         image.CopyTo(new FileStream(filePath, FileMode.Create));
 
-                        productPaths.Add(filePath.ToString());
+                        productPaths.Add(@"uploads\" + newFileName);
                         productAlts.Add(newFileName);
                     }
 

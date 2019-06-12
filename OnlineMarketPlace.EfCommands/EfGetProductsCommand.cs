@@ -80,7 +80,6 @@ namespace OnlineMarketPlace.EfCommands
                 ImagePaths = p.ProductImages.Select(pi => pi.Image.Path).ToList(),
                 ImageAlts = p.ProductImages.Select(pi => pi.Image.Alt).ToList()
             }).ToList();
-
             return productDtos;
         }
 

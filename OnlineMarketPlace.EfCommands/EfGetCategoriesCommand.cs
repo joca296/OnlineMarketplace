@@ -23,8 +23,10 @@ namespace OnlineMarketPlace.EfCommands
             var categories = _context.Categories.AsQueryable();
 
             if (request.Id == null)
+            {
                 if (request.Name != null)
                     categories = categories.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
+            }
             else
                 categories = categories.Where(x=> x.Id == request.Id);
 

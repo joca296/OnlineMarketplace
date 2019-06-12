@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OnlineMarketPlace.MVC.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnlineMarketPlace.Application.Commands;
+using OnlineMarketPlace.DataAccess;
+using OnlineMarketPlace.EfCommands;
 
 namespace OnlineMarketPlace.MVC
 {
@@ -35,14 +34,38 @@ namespace OnlineMarketPlace.MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDbContext<Context>();
+            services.AddTransient<IActivateUserCommand, EfActiaveUserCommand>();
+            services.AddTransient<IAuthenticateUserCommand, EfAuthenticateUserCommand>();
+            services.AddTransient<ICreateCategoryCommand, EfCreateCategoryCommand>();
+            services.AddTransient<ICreateCouponCommand, EfCreateCouponCommand>();
+            services.AddTransient<ICreateOrderCommand, EfCreateOrderCommand>();
+            services.AddTransient<ICreateProductCommand, EfCreateProductCommand>();
+            services.AddTransient<ICreateRoleCommand, EfCreateRoleCommand>();
+            services.AddTransient<ICreateShipperCommand, EfCreateShipperCommand>();
+            services.AddTransient<ICreateShippingAddressCommand, EfCreateShippingAddressCommand>();
+            services.AddTransient<ICreateSubCategoryCommand, EfCreateSubCategoryCommand>();
+            services.AddTransient<ICreateUserCommand, EfCreateUserCommand>();
+            services.AddTransient<IDeleteOrdersCommand, EfDeleteOrdersCommand>();
+            services.AddTransient<IDeleteProductsCommand, EfDeleteProductsCommand>();
+            services.AddTransient<IDeleteShipperCommand, EfDeleteShipperCommand>();
+            services.AddTransient<IDeleteShippingAddressCommand, EfDeleteShippingAddressCommand>();
+            services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
+            services.AddTransient<IEditProductCommand, EfEditProductCommand>();
+            services.AddTransient<IEditShipperCommand, EfEditShipperCommand>();
+            services.AddTransient<IEditShippingAddressCommand, EfEditShippingAddressesCommand>();
+            services.AddTransient<IEditUserEmailCommand, EfEditUserEmailCommand>();
+            services.AddTransient<IEditUserPasswordCommand, EfEditUserPasswordCommand>();
+            services.AddTransient<IGetCategoriesCommand, EfGetCategoriesCommand>();
+            services.AddTransient<IGetOrdersCommand, EfGetOrdersCommand>();
+            services.AddTransient<IGetProductsCommand, EfGetProductsCommand>();
+            services.AddTransient<IGetRolesCommand, EfGetRolesCommand>();
+            services.AddTransient<IGetShippersCommand, EfGetShippersCommand>();
+            services.AddTransient<IGetShippingAddressesCommand, EfGetShippingAddressesCommand>();
+            services.AddTransient<IGetSubCategoriesCommand, EfGetSubCategoriesCommand>();
+            services.AddTransient<IGetUsersCommand, EfGetUsersCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +74,6 @@ namespace OnlineMarketPlace.MVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -64,13 +86,11 @@ namespace OnlineMarketPlace.MVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseAuthentication();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Products}/{action=Index}/{id?}");
             });
         }
     }
