@@ -22,8 +22,10 @@ namespace OnlineMarketPlace.EfCommands
             var roles = _context.Roles.AsQueryable();
 
             if (request.Id == null)
+            {
                 if (request.Name != null)
                     roles = roles.Where(x => x.Name.Trim().ToLower().Contains(request.Name.Trim().ToLower()));
+            }
             else
                 roles = roles.Where(x=> x.Id == request.Id);
 

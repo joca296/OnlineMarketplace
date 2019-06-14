@@ -48,11 +48,13 @@ namespace OnlineMarketPlace.MVC.Controllers
             }
             catch (EntityNotFoundException e)
             {
-                return NotFound(e.Message);
+                TempData["message"] = e.Message;
+                return Redirect("~/");
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                TempData["message"] = e.Message;
+                return Redirect("~/");
             }
         }
 

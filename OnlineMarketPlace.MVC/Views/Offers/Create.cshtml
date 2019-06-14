@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Create Offer";
+}
+
+<div class="row">
+    <div class="col-12">
+        <form asp-controller="Offers" asp-action="Insert" method="post">
+            <div class="form-group">
+                <input type="number" name="UserId" placeholder="User Id" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="number" name="ShippingAddressId" placeholder="Shipping address Id" class="form-control" />
+            </div>
+            <div class="form-group">
+                <select name="ShipperId" class="form-control">
+                    @foreach (var shipper in Model)
+                    {
+                        <option value="@shipper.Id">@shipper.Name (Base: @shipper.FreightBase, PerKilo: @shipper.FreightPerKilo)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group" id="products">
+                <input type="number" name="ProductIds[]" placeholder="Product Id" class="form-control" />
+                <input type="number" name="QuantityPerProduct[]" placeholder="Quantity" class="form-control" />
+                <button type="button" id="add-products" class="btn btn-success">Add more products</button>
+            </div>
+            <div class="form-group" id="coupons">
+                <button type="button" id="add-coupon-codes" class="btn btn-success">Add coupon codes</button>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <input type="reset" class="btn btn-danger" value="Reset" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{ 
+    <script>
+        $("#add-products").click(function () {
+            var output = "<div class=\"form-group\">";
+            output += "<input type=\"number\" name=\"ProductIds[]\" placeholder=\"Product Id\" class=\"form-control\" />";
+            output += "<input type=\"number\" name=\"QuantityPerProduct[]\" placeholder=\"Quantity\" class=\"form-control\" />";
+            output += "<button type=\"button\" class=\"btn btn-danger remove\">Remove</button>";
+            output += "</div>";
+            $("#products").after(output);
+        });
+
+        $("#add-coupon-codes").click(function () {
+            var output = "<div class=\"form-group\">";
+            output += "<input type=\"text\" name=\"CouponCodes[]\" placeholder=\"Coupon Code\" class=\"form-control\" />";
+            output += "<button type=\"button\" class=\"btn btn-danger remove\">Remove</button>";
+            output += "</div>";
+            $("#coupons").after(output);
+        });
+
+        $(document).on('click', '.remove', function () {
+            $(this).parent().remove();
+        })
+    </script>
+}
