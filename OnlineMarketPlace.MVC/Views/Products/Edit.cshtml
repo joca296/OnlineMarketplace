@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="row">
+    <div class="col-12">
+        <form asp-controller="Products" asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="text" name="Name" placeholder="Product Name" class="form-control" value="@Model.Name" />
+            </div>
+            <div class="form-group">
+                <textarea name="Description" placeholder="Description" class="form-control">@Model.Description</textarea>
+            </div>
+            <div class="form-group">
+                <input type="number" name="UnitPrice" placeholder="Unit Price" class="form-control" value="@Model.UnitPrice"/>
+            </div>
+            <div class="form-group">
+                <input type="number" name="UnitWeight" placeholder="Unit Weight" class="form-control" value="@Model.UnitWeight"/>
+            </div>
+            <div class="form-group">
+                <input type="number" name="QuantityAvailable" placeholder="Quantity Available" class="form-control" value="@Model.QuantityAvailable"/>
+            </div>
+            <div class="form-group">
+                <input type="number" name="CategoryId" placeholder="Category Id" class="form-control" value="@Model.Category.Id"/>
+            </div>
+            <div class="form-group">
+                <input type="number" name="SubCategoryId" placeholder="SubCategory Id" class="form-control" value="@Model.SubCategory.Id"/>
+            </div>
+            <div class="form-group">
+                <input type="file" multiple name="Images" placeholder="Images" class="form-control-file" />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <input type="reset" class="btn btn-danger" value="Reset" />
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -250,14 +250,14 @@ namespace OnlineMarketPlace.API.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public IActionResult Edit(int id, [FromQuery] ProductEdit p)
+        public IActionResult Edit(int id, [FromForm] ProductEdit p)
         {
             try
             {
                 List<string> productPaths = new List<string>();
                 List<string> productAlts = new List<string>();
 
-                if (p.Images.Count != 0)
+                if (p.Images != null && p.Images.Count != 0)
                     foreach (var image in p.Images)
                     {
                         var extension = Path.GetExtension(image.FileName);
