@@ -93,6 +93,7 @@ namespace OnlineMarketPlace.EfCommands
                 throw new EntityNotFoundException("Orders");
 
             List<GetOrderDto> getOrderDtos = orders.Select(o => new GetOrderDto {
+                Id = o.Id,
                 FirstName = o.User.FirstName,
                 LastName = o.User.LastName,
                 UserEmail = o.User.Email,

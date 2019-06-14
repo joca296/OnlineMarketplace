@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row" id="search-orders">
+    <div class="col-12">
+        <form id="search-orders" action="#" method="post">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="First name">
+                </div>
+                <div class="col">
+                    <input type="text" id="LastName" name="LastName" class="form-control" placeholder="Last name">
+                </div>
+                <div class="col">
+                    <input type="text" id="UserId" name="UserId" class="form-control" placeholder="User Id">
+                </div>
+                <div class="col">
+                    <input type="text" id="OrderId" name="OrderId" class="form-control" placeholder="Order Id">
+                </div>
+                <input type="submit" class="btn btn-primary" value="Search" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row" id="orders">
+
+</div>
+
+@section Scripts{ 
+    <script>
+        $("#search-orders").submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type : "POST",
+                url: "Orders/Search",
+                data: {
+                    "FirstName": $("#FirstName").val(),
+                    "LastName": $("#LastName").val(),
+                    "UserId": $("#UserId").val(),
+                    "OrderId": $("#OrderId").val(),
+                },
+                success: function (data) {
+                    $("#orders").html(data);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+}

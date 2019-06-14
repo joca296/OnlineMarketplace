@@ -24,6 +24,7 @@ namespace OnlineMarketPlace.EfCommands
                 .Include(o => o.Shipper)
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product)
                 .AsQueryable();
 
             if (request.Id == null)
@@ -91,7 +92,7 @@ namespace OnlineMarketPlace.EfCommands
 
             foreach (var order in orders)
             {
-                if (order.DateShipped == null || order.DateShipped == null)
+                if (order.DateShipped == null)
                 {
                     MailMessage message = new MailMessage();
                     message.From = new MailAddress("onlinemarketplace@gmail.com", "OnlineMarketPlace");
@@ -104,6 +105,11 @@ namespace OnlineMarketPlace.EfCommands
                     message.Body = body;
 
                     Functions.SmtpClient.Send(message);
+
+                    foreach (var product in order.OrderProducts)
+                    {
+                        product.Product.QuantityAvailable += product.Quantity;
+                    }
                 }
 
                 if (order.OrderCoupons.Count() != 0)
@@ -115,6 +121,8 @@ namespace OnlineMarketPlace.EfCommands
 
                 order.Active = false;
             }
+
+            _context.SaveChanges();
         }
 
         public bool Validate(OrderSearch request)

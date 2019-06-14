@@ -123,7 +123,7 @@ namespace OnlineMarketPlace.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public IActionResult GetAll([FromQuery] OrderSearch search)
+        public IActionResult GetAll([FromForm] OrderSearch search)
         {
             try
             {

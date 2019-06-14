@@ -10,15 +10,19 @@ using OnlineMarketPlace.Application.Searches;
 
 namespace OnlineMarketPlace.MVC.Controllers
 {
-    public class OffersController : Controller
+    public class OrdersController : Controller
     {
         private readonly IGetShippersCommand _getShippers;
         private readonly ICreateOrderCommand _createOrder;
+        private readonly IGetOrdersCommand _getOrders;
+        private readonly IDeleteOrdersCommand _deleteOrders;
 
-        public OffersController(IGetShippersCommand getShippers, ICreateOrderCommand createOrder)
+        public OrdersController(IGetShippersCommand getShippers, ICreateOrderCommand createOrder, IGetOrdersCommand getOrders, IDeleteOrdersCommand deleteOrders)
         {
             _getShippers = getShippers;
             _createOrder = createOrder;
+            _getOrders = getOrders;
+            _deleteOrders = deleteOrders;
         }
 
         public IActionResult Create()
@@ -64,6 +68,51 @@ namespace OnlineMarketPlace.MVC.Controllers
             {
                 TempData["message"] = e.Message;
                 return Redirect("~/Offers/Create");
+            }
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Search([FromForm] OrderSearch search)
+        {
+            try
+            {
+                var viewmodel = _getOrders.Execute(search);
+                return PartialView(viewmodel);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var search = new OrderSearch
+                {
+                    Id = id
+                };
+                _deleteOrders.Execute(search);
+                return Redirect("~/Orders");
+            }
+            catch (EntityNotFoundException e)
+            {
+                TempData["message"] = e.Message;
+                return Redirect("~/Orders");
+            }
+            catch (Exception e)
+            {
+                TempData["message"] = e.Message;
+                return Redirect("~/Orders");
             }
         }
     }
