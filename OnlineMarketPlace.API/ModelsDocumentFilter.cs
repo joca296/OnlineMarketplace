@@ -27,6 +27,7 @@ namespace OnlineMarketPlace.API
             context.SchemaRegistry.GetOrRegister(typeof(SubCategoryDto));
             context.SchemaRegistry.GetOrRegister(typeof(ChangeEmailDto));
             context.SchemaRegistry.GetOrRegister(typeof(ChangePasswordDto));
+            context.SchemaRegistry.GetOrRegister(typeof(GetUserBasicDto));
         }
     }
 }
