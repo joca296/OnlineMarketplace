@@ -19,6 +19,9 @@ namespace OnlineMarketPlace.EfCommands
         {
             var users = _context.Users
                 .Include(u => u.Orders)
+                    .ThenInclude(o => o.OrderCoupons)
+                .Include(u => u.Orders)
+                    .ThenInclude(o => o.OrderProducts)
                 .Include(u => u.ShippingAddresses)
                 .AsQueryable()
                 .Where(u => u.Id == request);
@@ -31,8 +34,18 @@ namespace OnlineMarketPlace.EfCommands
             foreach (var shippingAddress in user.ShippingAddresses)
                 shippingAddress.Active = false;
 
-            foreach (var order in user.Orders)
-                order.Active = false;
+            if(user.Orders.Count != 0)
+                foreach (var order in user.Orders)
+                {
+                    if (order.OrderCoupons.Count() != 0)
+                        foreach (var coupon in order.OrderCoupons)
+                            coupon.Active = false;
+
+                    foreach (var product in order.OrderProducts)
+                        product.Active = false;
+
+                    order.Active = false;
+                }
 
             user.Active = false;
 
