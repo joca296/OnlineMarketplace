@@ -6,6 +6,7 @@
 <div class="row">
     <div class="col-12">
         <form asp-controller="Products" asp-action="Insert" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <input type="text" name="Name" placeholder="Product Name" class="form-control" />
             </div>

@@ -5,6 +5,7 @@
 <div class="row">
     <div class="col-12">
         <form asp-controller="Offers" asp-action="Insert" method="post">
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <input type="number" name="UserId" placeholder="User Id" class="form-control" />
             </div>

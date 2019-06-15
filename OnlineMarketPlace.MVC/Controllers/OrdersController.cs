@@ -31,6 +31,8 @@ namespace OnlineMarketPlace.MVC.Controllers
             return View(viewmodel);
         }
 
+        [HttpPost()]
+        [ValidateAntiForgeryToken]
         public IActionResult Insert([FromForm] CreateOrderDto dto)
         {
             try
@@ -76,6 +78,7 @@ namespace OnlineMarketPlace.MVC.Controllers
             return View();
         }
 
+        [HttpPost()]
         public IActionResult Search([FromForm] OrderSearch search)
         {
             try

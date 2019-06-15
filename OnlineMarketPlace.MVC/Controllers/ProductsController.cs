@@ -63,6 +63,8 @@ namespace OnlineMarketPlace.MVC.Controllers
             return View();
         }
 
+        [HttpPost()]
+        [ValidateAntiForgeryToken]
         public IActionResult Insert([FromForm] Product p)
         {
             try
@@ -169,6 +171,8 @@ namespace OnlineMarketPlace.MVC.Controllers
             }
         }
 
+        [HttpPost()]
+        [ValidateAntiForgeryToken]
         public IActionResult Update(int id, [FromForm] ProductEdit p)
         {
             try
