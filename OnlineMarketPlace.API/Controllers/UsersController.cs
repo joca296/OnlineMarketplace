@@ -85,7 +85,7 @@ namespace OnlineMarketPlace.API.Controllers
             }
             catch (EntityNotFoundException e)
             {
-                return UnprocessableEntity(e.Message);
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
