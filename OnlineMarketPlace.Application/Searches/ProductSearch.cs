@@ -14,5 +14,6 @@ namespace OnlineMarketPlace.Application.Searches
         public int? SubCategoryId { get; set; }
         public string CategoryName { get; set; }
         public string SubCategoryName { get; set; }
+        public int? ItemsPerPage { get; set; }
     }
 }

@@ -158,7 +158,10 @@ namespace OnlineMarketPlace.API.Controllers
             try
             {
                 var results = _getProducts.Execute(search);
-                return Ok(results);
+                if (search.ItemsPerPage != null)
+                    return Ok(Paginator<GetProductDto>.Paginate(results.ToList(), search.ItemsPerPage.Value));
+                else
+                    return Ok(results);
             }
             catch (EntityNotFoundException e)
             {
