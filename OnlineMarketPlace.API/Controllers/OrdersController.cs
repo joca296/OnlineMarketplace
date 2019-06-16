@@ -8,6 +8,7 @@ using OnlineMarketPlace.Application.Commands;
 using OnlineMarketPlace.Application.DataTransfer;
 using OnlineMarketPlace.Application.Exceptions;
 using OnlineMarketPlace.Application.Searches;
+using OnlineMarketPlace.DataAccess;
 
 namespace OnlineMarketPlace.API.Controllers
 {
@@ -15,12 +16,15 @@ namespace OnlineMarketPlace.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        private readonly Context _context;
+
         private readonly ICreateOrderCommand _createOrder;
         private readonly IGetOrdersCommand _getOrders;
         private readonly IDeleteOrdersCommand _deleteOrders;
 
-        public OrdersController(ICreateOrderCommand createOrder, IGetOrdersCommand getOrders, IDeleteOrdersCommand deleteOrders)
+        public OrdersController(Context context, ICreateOrderCommand createOrder, IGetOrdersCommand getOrders, IDeleteOrdersCommand deleteOrders)
         {
+            _context = context;
             _createOrder = createOrder;
             _getOrders = getOrders;
             _deleteOrders = deleteOrders;
@@ -192,6 +196,60 @@ namespace OnlineMarketPlace.API.Controllers
             try
             {
                 _deleteOrders.Execute(search);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet("MarkShipped/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult MarkShipped(int id)
+        {
+            try
+            {
+                if(!_context.Orders.Any(x=>x.Id==id))
+                    return NotFound("Order not found");
+
+                var order = _context.Orders.Find(id);
+
+                order.DateShipped = DateTime.Now;
+
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet("MarkDelivered/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult MarkDelivered(int id)
+        {
+            try
+            {
+                if (!_context.Orders.Any(x => x.Id == id))
+                    return NotFound("Order not found");
+
+                var order = _context.Orders.Find(id);
+
+                order.DateDelivered = DateTime.Now;
+
+                _context.SaveChanges();
+
                 return Ok();
             }
             catch (EntityNotFoundException e)
