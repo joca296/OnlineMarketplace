@@ -22,6 +22,7 @@ namespace OnlineMarketPlace.EfCommands
                     .ThenInclude(o => o.OrderCoupons)
                 .Include(u => u.Orders)
                     .ThenInclude(o => o.OrderProducts)
+                        .ThenInclude(op => op.Product)
                 .Include(u => u.ShippingAddresses)
                 .AsQueryable()
                 .Where(u => u.Id == request);
@@ -43,6 +44,12 @@ namespace OnlineMarketPlace.EfCommands
 
                     foreach (var product in order.OrderProducts)
                         product.Active = false;
+
+                    if(order.DateShipped == null)
+                        foreach (var product in order.OrderProducts)
+                        {
+                            product.Product.QuantityAvailable += product.Quantity;
+                        }
 
                     order.Active = false;
                 }

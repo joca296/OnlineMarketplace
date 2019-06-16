@@ -23,6 +23,7 @@ namespace OnlineMarketPlace.EfCommands
                     .ThenInclude(o => o.User)
                 .Include(s => s.Orders)
                     .ThenInclude(o => o.OrderProducts)
+                        .ThenInclude(op => op.Product)
                 .Include(s => s.Orders)
                     .ThenInclude(o => o.OrderCoupons)
                 .AsQueryable()
@@ -49,6 +50,11 @@ namespace OnlineMarketPlace.EfCommands
                     message.Body = body;
 
                     Functions.SmtpClient.Send(message);
+
+                    foreach (var product in order.OrderProducts)
+                    {
+                        product.Product.QuantityAvailable += product.Quantity;
+                    }
                 }
 
                 foreach (var product in order.OrderProducts)
